@@ -1,0 +1,1 @@
+export const JWT_SECRET = 'JSON_WEB_TOKEN_SECRET';
