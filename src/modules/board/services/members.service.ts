@@ -1,11 +1,15 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 
+import { UserService } from '../../user/user.service';
 import { BoardService } from './board.service';
 
 @Injectable()
 export class MemberService {
 
-    constructor( private readonly boardService: BoardService ) {}
+    constructor(
+        private readonly boardService: BoardService,
+        private readonly userService: UserService
+    ) {}
 
     async addMember( boardId: string, userId: string ): Promise<any> {
 
@@ -22,6 +26,12 @@ export class MemberService {
                 members: userId,
             },
         });
+
+        await this.userService.updateUser( userId, {
+            $push: {
+                boards: boardId,
+            },
+        })
 
         return boardUpdated;
     }
@@ -40,6 +50,12 @@ export class MemberService {
             $pull: {
                 members: userId,
                 admins: userId,
+            },
+        });
+
+        await this.userService.updateUser( userId, {
+            $pull: {
+                boards: boardId,
             },
         });
 

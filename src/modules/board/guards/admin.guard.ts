@@ -16,7 +16,7 @@ export class AdminGuard implements CanActivate {
 
         const isAdmin = admins.includes( userId );
         if ( !isAdmin ) {
-            throw new UnauthorizedException('No tienes permisos para realizar esta acción');
+            throw new UnauthorizedException('No eres administrador del tablero');
         }
 
         return true;

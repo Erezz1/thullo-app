@@ -5,9 +5,11 @@ import { BoardController, MemberController } from './controllers';
 import { BoardService, MemberService } from './services';
 import { ValidateBoardMiddleware } from './middlewares';
 import { Board, BoardSchema } from './schema/board.schema';
+import { UserModule } from '../user/user.module';
 
 @Module({
     imports: [
+        UserModule,
         MongooseModule.forFeature([{ name: Board.name, schema: BoardSchema }]),
     ],
     controllers: [ BoardController, MemberController ],

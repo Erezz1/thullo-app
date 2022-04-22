@@ -24,6 +24,7 @@ export class UserController {
             email: foundUser.email,
             id: foundUser._id,
             name: foundUser.name,
+            boards: foundUser.boards,
         }
 
         return userResponse;

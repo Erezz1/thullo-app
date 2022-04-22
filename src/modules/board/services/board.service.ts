@@ -3,39 +3,47 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { createBoardPayload } from '../interfaces';
+import { UserService } from '../../user/user.service';
 import { Board, BoardDocument } from '../schema/board.schema';
 
 @Injectable()
 export class BoardService {
 
     constructor(
-        @InjectModel( Board.name ) private userModel: Model<BoardDocument>,
+        @InjectModel( Board.name ) private boardModel: Model<BoardDocument>,
+        private readonly userService: UserService,
     ) {}
 
     async findBoardById( id: string ): Promise<any> {
-        const boardFound = await this.userModel.findById( id );
+        const boardFound = await this.boardModel.findById( id );
         return boardFound;
     }
 
-    async createBoard( board: createBoardPayload ): Promise<any> {
-        const boardCreated = new this.userModel( board );
+    async createBoard( userId: string, board: createBoardPayload ): Promise<any> {
+        const boardCreated = new this.boardModel( board );
         await boardCreated.save();
+
+        await this.userService.updateUser( userId, {
+            $push: {
+                boards: boardCreated._id,
+            },
+        });
 
         return boardCreated;
     }
 
     async updateNameBoard( boardId: string, newName: string ): Promise<any> {
-        const boardUpdated = await this.userModel.findByIdAndUpdate( boardId, { name: newName }, { new: true });
+        const boardUpdated = await this.boardModel.findByIdAndUpdate( boardId, { name: newName }, { new: true });
         return boardUpdated;
     }
 
     async updateBoard( boardId: string, payload: any ): Promise<any> {
-        const boardUpdated = await this.userModel.findByIdAndUpdate( boardId, payload, { new: true });
+        const boardUpdated = await this.boardModel.findByIdAndUpdate( boardId, payload, { new: true });
         return boardUpdated;
     }
 
-    async deleteBoard( id: string ): Promise<string> {
-        await this.userModel.findByIdAndDelete( id );
+    async deleteBoard( id: string ): Promise<any> {
+        await this.boardModel.findByIdAndDelete( id );
         return `Tablero con id: ${ id } eliminado`;
     }
 }

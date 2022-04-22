@@ -39,7 +39,7 @@ export class BoardController {
             admins: [ userId ],
         }
 
-        const boardCreated = await this.boardService.createBoard( createBoardPayload );
+        const boardCreated = await this.boardService.createBoard( userId, createBoardPayload );
 
         const boardResponse: boardResponse = {
             id: boardCreated._id,
