@@ -27,7 +27,7 @@ export class AuthController {
 
     @Get('revalidate-token')
     async revalidateToken(
-        @Request() req
+        @Request() req: any
     ): Promise<JwtResponse> {
         const { _id } = req.user;
 

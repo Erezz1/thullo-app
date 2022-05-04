@@ -10,7 +10,7 @@ export class AdminGuard implements CanActivate {
         const request = context.switchToHttp().getRequest();
 
         const { _id: userId } = request.user;
-        const { boardId } = request.params;
+        const boardId= request.params.boardId || request.body.boardId;
 
         const { admins } = await this.boardService.findBoardById( boardId );
 

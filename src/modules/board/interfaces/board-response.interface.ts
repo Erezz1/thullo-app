@@ -3,4 +3,5 @@ export interface boardResponse {
     name: string;
     cover: string;
     members: string[];
+    lists: string[];
 }

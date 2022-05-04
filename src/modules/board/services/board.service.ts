@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, QueryOptions } from 'mongoose';
 
 import { createBoardPayload } from '../interfaces';
 import { UserService } from '../../user/user.service';
@@ -37,7 +37,7 @@ export class BoardService {
         return boardUpdated;
     }
 
-    async updateBoard( boardId: string, payload: any ): Promise<any> {
+    async updateBoard( boardId: string, payload: QueryOptions ): Promise<any> {
         const boardUpdated = await this.boardModel.findByIdAndUpdate( boardId, payload, { new: true });
         return boardUpdated;
     }

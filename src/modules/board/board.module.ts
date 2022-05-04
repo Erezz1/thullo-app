@@ -14,6 +14,7 @@ import { UserModule } from '../user/user.module';
     ],
     controllers: [ BoardController, MemberController ],
     providers: [ BoardService, MemberService ],
+    exports: [ BoardService ]
 })
 
 export class BoardModule implements NestModule {

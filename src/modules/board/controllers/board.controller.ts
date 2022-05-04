@@ -20,6 +20,7 @@ export class BoardController {
             name: boardFound.name,
             cover: boardFound.cover,
             members: boardFound.members,
+            lists: boardFound.lists,
         }
 
         return boardResponse;
@@ -28,7 +29,7 @@ export class BoardController {
     @Post('/create')
     async createBoard(
         @Body() board: CreateBoardDto,
-        @Request() req,
+        @Request() req: any,
     ): Promise<boardResponse> {
 
         const { _id: userId } = req.user;
@@ -46,6 +47,7 @@ export class BoardController {
             name: boardCreated.name,
             cover: boardCreated.cover,
             members: boardCreated.members,
+            lists: boardCreated.lists,
         }
 
         return boardResponse;
@@ -66,6 +68,7 @@ export class BoardController {
             name: boardUpdated.name,
             cover: boardUpdated.cover,
             members: boardUpdated.members,
+            lists: boardUpdated.lists,
         }
 
         return boardResponse;

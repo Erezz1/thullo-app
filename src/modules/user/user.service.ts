@@ -1,4 +1,4 @@
-import { Model } from 'mongoose';
+import { Model, QueryOptions } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
@@ -28,7 +28,7 @@ export class UserService {
         return await this.userModel.findOne({ email });
     }
 
-    async updateUser( id: string, payload: any ): Promise<any> {
+    async updateUser( id: string, payload: QueryOptions ): Promise<any> {
         const userUpdated = await this.userModel.findByIdAndUpdate( id, payload, { new: true });
         return userUpdated;
     }

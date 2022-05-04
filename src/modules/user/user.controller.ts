@@ -16,7 +16,7 @@ export class UserController {
     ) {}
 
     @Get()
-    async getUser(@Request() req ): Promise<UserResponse> {
+    async getUser(@Request() req: any ): Promise<UserResponse> {
         const { _id: userId } = req.user;
         const foundUser = await this.userService.getUserById( userId );
 

@@ -27,6 +27,7 @@ export class MemberController {
             name: boardUpdated.name,
             cover: boardUpdated.cover,
             members: boardUpdated.members,
+            lists: boardUpdated.lists,
         }
 
         return boardResponse;
@@ -38,7 +39,7 @@ export class MemberController {
     async removeMember(
         @Param('boardId') boardId: string,
         @Body() member: RemoveMemberDto,
-        @Request() req
+        @Request() req: any
     ): Promise<boardResponse> {
         const { userId } = member;
         const { _id: adminId } = req.user;
@@ -54,6 +55,7 @@ export class MemberController {
             name: boardUpdated.name,
             cover: boardUpdated.cover,
             members: boardUpdated.members,
+            lists: boardUpdated.lists,
         }
 
         return boardResponse;
@@ -74,6 +76,7 @@ export class MemberController {
             name: boardUpdated.name,
             cover: boardUpdated.cover,
             members: boardUpdated.members,
+            lists: boardUpdated.lists,
         }
 
         return boardResponse;
@@ -85,7 +88,7 @@ export class MemberController {
     async removeAdmin(
         @Param('boardId') boardId: string,
         @Body() admin: RemoveMemberDto,
-        @Request() req
+        @Request() req: any
     ): Promise<boardResponse> {
         const { userId } = admin;
         const { _id: adminId } = req.user;
@@ -101,6 +104,7 @@ export class MemberController {
             name: boardUpdated.name,
             cover: boardUpdated.cover,
             members: boardUpdated.members,
+            lists: boardUpdated.lists,
         }
 
         return boardResponse;
