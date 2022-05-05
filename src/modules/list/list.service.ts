@@ -36,7 +36,37 @@ export class ListService {
         return listUpdated;
     }
 
-    async deleteList( listId: string, boardId: string ): Promise<any> {
+    async addCard( listId: string, newCard: string ): Promise<any> {
+        const listFound = await this.listModel.findByIdAndUpdate( listId, {
+            $push: {
+                cards: newCard,
+            },
+        }, { new: true });
+
+        return listFound;
+    }
+
+    async removeCard( listId: string, cardId: string ): Promise<any> {
+        const listFound = await this.listModel.findByIdAndUpdate( listId, {
+            $pull: {
+                cards: cardId,
+            },
+        }, { new: true });
+
+        return listFound;
+    }
+
+    async changeCardsPosition( listId: string, cards: string[] ): Promise<any> {
+        const listFound = await this.listModel.findByIdAndUpdate( listId, {
+            $set: {
+                cards,
+            },
+        }, { new: true });
+
+        return listFound;
+    }
+
+    async deleteList( listId: string, boardId: string ): Promise<string> {
         const listDeleted = await this.listModel.findByIdAndDelete( listId );
 
         await this.boardService.updateBoard( boardId, {

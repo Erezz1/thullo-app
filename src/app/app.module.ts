@@ -7,6 +7,7 @@ import { AuthModule } from '../modules/auth/auth.module';
 import { BoardModule } from '../modules/board/board.module';
 import { ListModule } from 'src/modules/list/list.module';
 import { AppController } from './app.controller';
+import { CardModule } from 'src/modules/card/card.module';
 
 @Module({
     imports: [
@@ -16,6 +17,7 @@ import { AppController } from './app.controller';
         AuthModule,
         BoardModule,
         ListModule,
+        CardModule
     ],
     controllers: [ AppController ],
 })

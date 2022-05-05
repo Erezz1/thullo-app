@@ -17,6 +17,9 @@ import { ValidateListMiddleware } from './middleware';
     providers: [
         ListService,
     ],
+    exports: [
+        ListService,
+    ],
 })
 
 export class ListModule {
