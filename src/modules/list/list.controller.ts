@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 
 import { ListService } from './list.service';
-import { CreateListDto, DeleteListDto, UpdateListDto } from './dto';
+import { ChangeCardsPositionDto, CreateListDto, DeleteListDto, UpdateListDto } from './dto';
 import { ListResponse } from './interfaces';
 
 @Controller('list')
@@ -51,6 +51,23 @@ export class ListController {
         }
         return ListResponse;
     }
+
+    @Put('/cards/:listId')
+    async changeCardsPosition(
+        @Param('listId') listId: string,
+        @Body() body: ChangeCardsPositionDto
+    ): Promise<ListResponse> {
+        const { cards } = body;
+        const listUpdated = await this.listService.changeCardsPosition( listId, cards );
+
+        const listResponse: ListResponse = {
+            id: listUpdated._id,
+            name: listUpdated.name,
+            cards: listUpdated.cards,
+        }
+        return listResponse;
+    }
+
 
     @Delete('/:listId')
     async deleteList(
