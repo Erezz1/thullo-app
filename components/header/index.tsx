@@ -9,6 +9,7 @@ import logo from '@/public/images/Logo.svg';
 const Header = () => {
     return (
         <Box
+            as="header"
             width="full"
             py="3"
             px="5"

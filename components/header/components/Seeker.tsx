@@ -24,19 +24,9 @@ const Seeker = () => {
                 <Button
                     fontSize="sm"
                     rounded="xl"
-                    backgroundColor="#2F80ED"
-                    color="#fff"
+                    colorScheme="blue"
                     h="8"
                     mr="1"
-                    _hover={{
-                        backgroundColor: "#265DA5",
-                    }}
-                    _focus={{
-                        outline: "none",
-                    }}
-                    _active={{
-                        backgroundColor: "#2F80ED",
-                    }}
                     type="submit"
                 >
                     Buscar

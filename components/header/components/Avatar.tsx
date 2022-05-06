@@ -5,8 +5,8 @@ import {
     MenuList,
     MenuItem,
     Avatar as ImageAvatar,
-    Text,
-    Icon
+    Icon,
+    Button
 } from '@chakra-ui/react'
 import { IoIosArrowDown, IoMdExit } from 'react-icons/io';
 
@@ -27,13 +27,16 @@ const Avatar = () => {
                     h="10"
                 />
 
-                <MenuButton as="button">
+                <MenuButton
+                    as={ Button }
+                    variant="ghost"
+                >
                     Dan Abrahmov
                     <Icon ml="2" as={ IoIosArrowDown } />
                 </MenuButton>
             </Box>
 
-            <MenuList>
+            <MenuList as="nav">
                 <MenuItem>Mis tableros</MenuItem>
 
                 <MenuItem>
