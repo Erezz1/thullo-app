@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Box } from '@chakra-ui/react';
 
 import Seeker from './components/Seeker';
@@ -20,10 +21,14 @@ const Header = () => {
             alignItems="center"
             justifyContent="space-between"
         >
-            <Image
-                src={ logo }
-                alt="Logotipo"
-            />
+            <Link href="/boards" passHref>
+                <a>
+                <Image
+                    src={ logo }
+                    alt="Logotipo"
+                />
+                </a>
+            </Link>
 
             <Box
                 display="flex"

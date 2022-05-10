@@ -21,7 +21,6 @@ const Boards: NextPage = () => {
         <Box
             height="100vh"
             width="100%"
-            backgroundColor="#F8F9FD"
         >
             <Header />
 
