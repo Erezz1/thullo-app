@@ -36,7 +36,7 @@ const RegisterForm = ({ login }: IProps ) => {
             bgColor="#FFF"
             shadow="lg"
             rounded="lg"
-            p="5"
+            py="5" px="10"
             display="flex"
             flexDirection="column"
             alignItems="center"
