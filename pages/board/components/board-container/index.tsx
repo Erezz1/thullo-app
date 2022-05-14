@@ -1,19 +1,27 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Box } from '@chakra-ui/react';
 import { DragDropContext } from 'react-beautiful-dnd-next';
 import { v4 as uuid } from 'uuid';
 
-import ListCards from './ListCards';
-import { IList, ILists } from '../interfaces';
+import ListCards from './components/ListCards';
+import CardDetails from '../card-details';
+import AddList from './components/AddList';
+import { IList, ILists } from '../../interfaces';
 
 const data: ILists = [
     {
         id: uuid(),
-        name: 'Blocklog 🧐 ',
+        name: 'Blocklog 🤔',
         cards: [
             {
                 id: uuid(),
                 title: 'First task',
+                description: 'This is the first task',
+                cover: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1472&q=80'
+            },
+            {
+                id: uuid(),
+                title: 'Last',
                 description: 'This is the first task',
                 cover: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1472&q=80'
             },
@@ -33,7 +41,7 @@ const data: ILists = [
     },
     {
         id: uuid(),
-        name: 'In progress 📑',
+        name: 'In Progress📚',
         cards: [
             {
                 id: uuid(),
@@ -51,7 +59,7 @@ const data: ILists = [
     },
     {
         id: uuid(),
-        name: 'In Review 🙅‍♀️',
+        name: 'Completed 🙌🏽',
         cards: []
     },
 ];
@@ -110,9 +118,15 @@ const onDragEnd = ( result:any, lists: ILists, setLists: Dispatch<SetStateAction
 
 const BoardContainer = () => {
 
-    const [ lists, setLists ] = useState<ILists>(data);
+    const [ lists, setLists ] = useState<ILists>([]);
+
+    useEffect(() => {
+        setLists( data );
+    },[]);
 
     return (
+        <>
+        <CardDetails />
         <Box
             w="100%"
             p="5"
@@ -130,17 +144,20 @@ const BoardContainer = () => {
                 <DragDropContext
                     onDragEnd={( result: any ) => onDragEnd( result, lists, setLists )}
                 >
-                {
-                    lists.map(( list, index ) => (
-                        <ListCards
-                            list={ list }
-                            key={ index }
-                        />
-                    ))
-                }
+                    {
+                        lists.map(( list, index ) => (
+                            <ListCards
+                                list={ list }
+                                key={ index }
+                            />
+                        ))
+                    }
+
+                    <AddList />
                 </DragDropContext>
             </Box>
         </Box>
+        </>
     );
 }
 

@@ -1,9 +1,9 @@
 import { Box } from '@chakra-ui/react';
 
-import AddMemberMenu from './AddMemberMenu';
-import MemberItem from './MemberItem';
+import AddMemberMenu from './components/AddMemberMenu';
+import MemberItem from './components/MemberItem';
 
-const MembersList = () => {
+const MembersLists = () => {
 
     const members = [
         1,2,3,4
@@ -27,4 +27,4 @@ const MembersList = () => {
     )
 }
 
-export default MembersList;
+export default MembersLists;

@@ -1,8 +1,10 @@
-import { Box, Text } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import { Droppable } from 'react-beautiful-dnd-next';
 
 import Card from './Card';
-import { IList } from '../interfaces';
+import ListSettings from './ListSettings';
+import AddCard from './AddCard';
+import { IList } from '../../../interfaces';
 
 interface IProps {
     list: IList;
@@ -10,7 +12,7 @@ interface IProps {
 
 const ListCards = ({ list }: IProps ) => {
 
-    const { cards, name, id } = list;
+    const { cards, id } = list;
 
     return (
         <Box
@@ -18,11 +20,7 @@ const ListCards = ({ list }: IProps ) => {
             w="2xs"
             key={ id }
         >
-            <Text
-                as="h2"
-                fontWeight="500"
-                mb="5"
-            >{ name }</Text >
+            <ListSettings list={ list } />
 
             <Droppable
                 droppableId={ id }
@@ -46,8 +44,9 @@ const ListCards = ({ list }: IProps ) => {
                                 />
                             ))
                         }
-
                         { provided.placeholder }
+
+                        <AddCard />
                     </Box>
                 )
             }

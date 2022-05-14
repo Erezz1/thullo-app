@@ -1,7 +1,7 @@
-import { Box, Image } from '@chakra-ui/react';
+import { Box, Image, Text } from '@chakra-ui/react';
 import { Draggable } from 'react-beautiful-dnd-next';
 
-import { ICard } from '../interfaces';
+import { ICard } from '../../../interfaces';
 
 interface IProps {
     card: ICard;
@@ -47,7 +47,7 @@ const Card = ({ card, index }: IProps ) => {
                             />
                         )
                     }
-                    { title }
+                    <Text fontWeight="500">{ title }</Text>
                 </Box>
             )
         }
