@@ -1,18 +1,19 @@
 import { useEffect } from 'react';
+import type { NextPage } from 'next';
 import dynamic from 'next/dynamic';
 import {
     Box,
     useToast
 } from '@chakra-ui/react';
 
-import Header from '@/components/header';
+import Layout from '@/components/layout';
 import BoardContainer from './components/board-container';
 import { useWindowSize } from 'hooks';
 
 const MembersList = dynamic( () => import(/* webpackChunkName: "members-list" */ './components/members-list') );
 const BoardDetails = dynamic( () => import(/* webpackChunkName: "board-details" */ './components/board-details') );
 
-const Board = () => {
+const Board: NextPage = () => {
 
     // Obtenemos la funcion para mostrar el componente toast y el tamaño de la ventana
     const toast = useToast();
@@ -32,12 +33,7 @@ const Board = () => {
     }, [ windowSize, toast ]);
 
     return (
-        <Box
-            height="100vh"
-            width="100%"
-        >
-            <Header />
-
+        <Layout title="Hola">
             <Box
                 p="5"
                 pb="0"
@@ -50,7 +46,7 @@ const Board = () => {
             </Box>
 
             <BoardContainer />
-        </Box>
+        </Layout>
     )
 }
 

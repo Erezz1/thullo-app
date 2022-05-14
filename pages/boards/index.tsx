@@ -8,7 +8,7 @@ import {
 } from '@chakra-ui/react';
 import { IoMdAdd } from 'react-icons/io';
 
-import Header from '@/components/header';
+import Layout from '@/components/layout';
 import AddBoard from './components/AddBoard';
 import BoardsList from './components/BoardsList';
 
@@ -18,12 +18,7 @@ const Boards: NextPage = () => {
 
     return (
         <>
-        <Box
-            height="100vh"
-            width="100%"
-        >
-            <Header />
-
+        <Layout title="Tableros">
             <Box
                 w="95%"
                 maxW="1200px"
@@ -55,7 +50,7 @@ const Boards: NextPage = () => {
 
                 <BoardsList />
             </Box>
-        </Box>
+        </Layout>
 
         <AddBoard isOpen={ isOpen } onClose={ onClose } />
         </>
