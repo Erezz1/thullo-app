@@ -12,6 +12,8 @@ const bootstrap = async () => {
         forbidNonWhitelisted: true, // ? No permite que se envien campos que no esten en el dto
     }));
 
+    app.enableCors();
+
     await app.listen( AppModule.port );
     console.log('Server running on port:', AppModule.port);
 }
