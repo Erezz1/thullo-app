@@ -14,7 +14,7 @@ export class ExistEmailMiddleware implements NestMiddleware {
     const user = await this.userService.getUserByEmail( email );
 
     if ( user ) {
-      throw new BadRequestException( 'El email ya está registrado' );
+      throw new BadRequestException( 'El email ya ha sido registrado anteriormente.' );
     }
 
     next();
