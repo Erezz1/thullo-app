@@ -25,6 +25,7 @@ export class UserController {
             id: foundUser._id,
             name: foundUser.name,
             boards: foundUser.boards,
+            imageAvatar: foundUser.imageAvatar,
         }
 
         return userResponse;

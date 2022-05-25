@@ -24,6 +24,11 @@ export class User {
         type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Board' }],
     })
     boards: Board[];
+
+    @Prop({
+        default: 'https://i.pravatar.cc/300',
+    })
+    imageAvatar: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass( User );

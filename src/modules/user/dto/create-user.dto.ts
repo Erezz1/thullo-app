@@ -11,4 +11,7 @@ export class CreateUserDto {
     @IsString({ message: 'La password debe ser una cadena de caracteres' })
     @Length(6, 30, { message: 'El password debe tener entre 6 y 30 caracteres' })
     readonly password: string;
+
+    @IsString({ message: 'La imagen debe ser una cadena de caracteres' })
+    readonly imageAvatar: string;
 }

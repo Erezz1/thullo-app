@@ -3,4 +3,5 @@ export interface UserResponse {
     name: string;
     email: string;
     boards: string[];
+    imageAvatar: string;
 }
