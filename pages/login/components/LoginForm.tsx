@@ -1,10 +1,13 @@
 import { ChangeEvent, useState } from 'react';
+import { useSession, signIn, signOut } from 'next-auth/react';
 import Image from 'next/image';
 import {
-    Box, Button, Text,
+    Box,
+    Button,
+    Input,
+    Text,
 } from '@chakra-ui/react';
 
-import InputFloating from './InputFloating';
 import logo from '@/public/images/Logo.svg';
 
 interface IProps {
@@ -12,6 +15,9 @@ interface IProps {
 }
 
 const LoginForm = ({ register }: IProps ) => {
+
+    const { data: session } = useSession();
+    console.log( session );
 
     const [ formState, setFormState ] = useState({
         email: '',
@@ -27,6 +33,10 @@ const LoginForm = ({ register }: IProps ) => {
         });
     }
 
+    const handleSubmit = async ( event: any ) => {
+        signIn();
+    }
+
     return (
         <Box
             bgColor="#FFF"
@@ -39,24 +49,27 @@ const LoginForm = ({ register }: IProps ) => {
             gap="5"
             width="xs"
             as="form"
+            onSubmit={ handleSubmit }
         >
             <Image
                 src={ logo }
                 alt="Logotipo"
             />
-            <InputFloating
+            <Input
                 placeholder="Correo electrónico"
                 name="email"
                 type="email"
                 value={ formState.email }
                 onChange={ handleInputChange }
+                autoComplete="off"
             />
-            <InputFloating
+            <Input
                 placeholder="Contraseña"
                 name="password"
                 type="password"
                 value={ formState.password }
                 onChange={ handleInputChange }
+                autoComplete="off"
             />
 
             <Button
@@ -64,6 +77,7 @@ const LoginForm = ({ register }: IProps ) => {
                 alignSelf="flex-end"
                 size="sm"
                 w="full"
+                type="submit"
             >Iniciar sesión</Button>
 
             <Text
