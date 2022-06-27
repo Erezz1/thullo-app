@@ -1,6 +1,7 @@
-import { ChangeEvent, useState } from 'react';
-import { useSession, signIn, signOut } from 'next-auth/react';
 import Image from 'next/image';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 import {
     Box,
     Button,
@@ -9,32 +10,39 @@ import {
 } from '@chakra-ui/react';
 
 import logo from '@/public/images/Logo.svg';
+import { useFormErrors } from '../hooks';
 
 interface IProps {
     register: () => void;
 }
 
+// Validaciones de cada campo del formulario
+type IFormInputs = {
+    email: string;
+    password: string;
+}
+const schema = yup.object({
+    email: yup
+        .string()
+        .required('El correo es requerido')
+        .min(4, 'El correo debe tener al menos 4 caracteres')
+        .email('El correo electrónico no es válido'),
+
+    password: yup
+        .string()
+        .required('La contraseña es requerida')
+        .min(6, 'La contraseña debe tener al menos 6 caracteres'),
+}).required();
+
 const LoginForm = ({ register }: IProps ) => {
 
-    const { data: session } = useSession();
-    console.log( session );
-
-    const [ formState, setFormState ] = useState({
-        email: '',
-        password: '',
+    const { register: reg, handleSubmit, formState: { errors } } = useForm<IFormInputs>({
+        resolver: yupResolver( schema ),
     });
+    useFormErrors( errors );
 
-    const handleInputChange = ( event: ChangeEvent<HTMLInputElement> ) => {
-        const { name, value } = event.target;
-
-        setFormState( {
-            ...formState,
-            [ name ]: value,
-        });
-    }
-
-    const handleSubmit = async ( event: any ) => {
-        signIn();
+    const onSubmit = ( data: IFormInputs ) => {
+        console.log( data );
     }
 
     return (
@@ -49,7 +57,7 @@ const LoginForm = ({ register }: IProps ) => {
             gap="5"
             width="xs"
             as="form"
-            onSubmit={ handleSubmit }
+            onSubmit={ handleSubmit( onSubmit ) }
         >
             <Image
                 src={ logo }
@@ -57,19 +65,15 @@ const LoginForm = ({ register }: IProps ) => {
             />
             <Input
                 placeholder="Correo electrónico"
-                name="email"
                 type="email"
-                value={ formState.email }
-                onChange={ handleInputChange }
                 autoComplete="off"
+                { ...reg('email') }
             />
             <Input
                 placeholder="Contraseña"
-                name="password"
                 type="password"
-                value={ formState.password }
-                onChange={ handleInputChange }
                 autoComplete="off"
+                { ...reg('password') }
             />
 
             <Button
