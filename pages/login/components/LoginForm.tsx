@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -13,7 +14,7 @@ import logo from '@/public/images/Logo.svg';
 import { useFormErrors } from '../hooks';
 
 interface IProps {
-    register: () => void;
+    onRegister: () => void;
 }
 
 // Validaciones de cada campo del formulario
@@ -34,15 +35,23 @@ const schema = yup.object({
         .min(6, 'La contraseña debe tener al menos 6 caracteres'),
 }).required();
 
-const LoginForm = ({ register }: IProps ) => {
+const LoginForm = ({ onRegister }: IProps ) => {
 
+    // Estado del formulario
     const { register: reg, handleSubmit, formState: { errors } } = useForm<IFormInputs>({
         resolver: yupResolver( schema ),
     });
+
+    // Estado de los errores del formulario
     useFormErrors( errors );
 
-    const onSubmit = ( data: IFormInputs ) => {
-        console.log( data );
+    // Funcion para enviar el formulario
+    const onSubmit = async ( data: IFormInputs ) => {
+        await signIn('credentials', {
+            email: data.email,
+            password: data.password,
+            callbackUrl: '/boards',
+        })
     }
 
     return (
@@ -93,7 +102,7 @@ const LoginForm = ({ register }: IProps ) => {
                 ¿No tienes cuenta?
                 <Button
                     variant="link"
-                    onClick={ register }
+                    onClick={ onRegister }
                     ml="2"
                     fontSize="sm"
                 >Registrate!</Button>

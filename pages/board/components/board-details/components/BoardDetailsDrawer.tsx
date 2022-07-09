@@ -1,3 +1,4 @@
+import { RefObject } from 'react';
 import {
     Drawer,
     DrawerBody,
@@ -15,7 +16,7 @@ import { Members } from '../../../interfaces';
 interface IProps {
     isOpen: boolean;
     onClose: () => void;
-    btnRef: any;
+    btnRef: RefObject<any> | undefined;
 }
 
 const members: Members = [

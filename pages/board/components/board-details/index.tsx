@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { LegacyRef, useRef } from 'react';
 import {
     Button,
     useDisclosure
@@ -10,7 +10,7 @@ import BoardDetailsDrawer from './components/BoardDetailsDrawer';
 const BoardDetails = () => {
 
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const btnRef = useRef<any>();
+    const btnRef: LegacyRef<HTMLButtonElement> | undefined = useRef( null );
 
     return (
         <>

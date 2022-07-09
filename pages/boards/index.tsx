@@ -6,6 +6,9 @@ import {
     Text,
     useDisclosure
 } from '@chakra-ui/react';
+import { useSession } from 'next-auth/react';
+import jwt from 'next-auth/jwt';
+import { useRouter } from 'next/router';
 import { IoMdAdd } from 'react-icons/io';
 
 import Layout from '@/components/layout';
@@ -15,6 +18,16 @@ import BoardsList from './components/BoardsList';
 const Boards: NextPage = () => {
 
     const { isOpen, onOpen, onClose } = useDisclosure();
+
+    // Obtenemos la sesion del usuario y si no esta autenticado redirigimos a la pagina de login
+    const router = useRouter();
+    const { data: session } = useSession({
+        required: true,
+        onUnauthenticated: () => {
+            router.push('/login');
+        }
+    });
+    console.log( session?.accessToken );
 
     return (
         <>

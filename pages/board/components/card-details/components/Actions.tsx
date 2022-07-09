@@ -31,9 +31,9 @@ const CoverOption = ( props: any ) => {
 
     return (
         <Box as="label" w="full">
-            <input {...input} />
+            <input { ...input } />
             <Box
-                {...checkbox}
+                { ...checkbox }
                 cursor="pointer"
                 borderWidth="1px"
                 borderRadius="md"

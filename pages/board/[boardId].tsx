@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import type { NextPage } from 'next';
 import dynamic from 'next/dynamic';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 import {
     Box,
     useToast
@@ -18,6 +20,16 @@ const Board: NextPage = () => {
     // Obtenemos la funcion para mostrar el componente toast y el tamaño de la ventana
     const toast = useToast();
     const { windowSize } = useWindowSize();
+
+    // Obtenemos la sesion del usuario y si no esta autenticado redirigimos a la pagina de login
+    const router = useRouter();
+    const { data: session } = useSession({
+        required: true,
+        onUnauthenticated: () => {
+            router.push('/login');
+        }
+    });
+    console.log( session?.accessToken );
 
     // Valida si el usuario esta en una resolución de escritorio
     useEffect(() => {

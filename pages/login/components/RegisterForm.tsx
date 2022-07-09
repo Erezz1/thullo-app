@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -10,10 +11,11 @@ import {
 } from '@chakra-ui/react';
 
 import logo from '@/public/images/Logo.svg';
+import axiosInstance from 'client/axiosInstance';
 import { useFormErrors } from '../hooks';
 
 interface IProps {
-    login: () => void;
+    onLogin: () => void;
 }
 
 // Validaciones de cada campo del formulario
@@ -46,15 +48,31 @@ const schema = yup.object({
         .oneOf([ yup.ref('password'), null ], 'Las contraseñas no coinciden'),
 }).required();
 
-const RegisterForm = ({ login }: IProps ) => {
+const RegisterForm = ({ onLogin }: IProps ) => {
 
+    // Estado del formulario
     const { register, handleSubmit, formState: { errors } } = useForm<IFormInputs>({
         resolver: yupResolver( schema ),
     });
+
+    // Estado de los errores del formulario
     useFormErrors( errors );
 
-    const onSubmit = ( data: IFormInputs ) => {
-        console.log( data );
+
+    // Funcion para enviar el formulario
+    const onSubmit = async ( data: IFormInputs ) => {
+        const { data: response } = await axiosInstance.post('/user/create', {
+            name: data.name,
+            email: data.email,
+            password: data.password,
+            imageAvatar: ''
+        });
+
+        await signIn('credentials', {
+            email: response.user.email,
+            password: data.password,
+            callbackUrl: '/boards',
+        });
     }
 
     return (
@@ -119,7 +137,7 @@ const RegisterForm = ({ login }: IProps ) => {
                 ¿Ya tienes cuenta?
                 <Button
                     variant="link"
-                    onClick={ login }
+                    onClick={ onLogin }
                     ml="2"
                     fontSize="sm"
                 >Inicia sesion!</Button>

@@ -1,8 +1,10 @@
 import { ReactNode } from 'react';
 import Head from 'next/head';
+import { useSession } from 'next-auth/react';
 import { Box } from '@chakra-ui/react';
 
 import Header from '../header';
+import Loading from '../loading';
 
 interface IProps {
     children: ReactNode;
@@ -10,6 +12,12 @@ interface IProps {
 }
 
 const Layout = ({ children, title }: IProps ) => {
+
+    // Se valida el estado de la sesion, si se esta verificando la sesion del usuario se muestra el loading
+    const { status } = useSession();
+    if ( status === 'loading' ) {
+        return <Loading message="Validando sesion" />
+    }
 
     return (
         <>

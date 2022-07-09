@@ -20,6 +20,7 @@
       "@/pages/*": ["pages/*"],
       "@/public/*": ["public/*"],
       "@/redux/*": ["redux/*"],
+      "@/client/*": ["client/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

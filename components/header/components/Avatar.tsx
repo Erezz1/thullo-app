@@ -8,9 +8,15 @@ import {
     Icon,
     Button
 } from '@chakra-ui/react'
+import { signOut } from 'next-auth/react';
 import { IoIosArrowDown, IoMdExit } from 'react-icons/io';
 
 const Avatar = () => {
+
+    const handleLogout = () => {
+        signOut({ callbackUrl: '/login' });
+    }
+
     return (
         <Menu>
             <Box
@@ -39,7 +45,7 @@ const Avatar = () => {
             <MenuList as="nav">
                 <MenuItem>Mis tableros</MenuItem>
 
-                <MenuItem>
+                <MenuItem onClick={ handleLogout }>
                     Cerrar sesion
                     <Icon as={ IoMdExit } ml="2" />
                 </MenuItem>
