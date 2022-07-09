@@ -5,7 +5,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto';
 import { HashPasswordPipe } from './pipes';
 import { Public } from '../auth/decorators/public.decorator';
-import { JwtPayload, JwtResponse } from '../auth/interfaces';
+import { ILogin, JwtPayload } from '../auth/interfaces';
 import { UserResponse } from './interfaces';
 
 @Controller('user')
@@ -36,7 +36,7 @@ export class UserController {
     async createUser(
         @Body() user: CreateUserDto,
         @Body('password', HashPasswordPipe ) password: string,
-    ): Promise<JwtResponse> {
+    ): Promise<ILogin> {
 
         const userPayload = {
             ...user,
@@ -47,6 +47,17 @@ export class UserController {
         const tokenPayload: JwtPayload = { userId: userRegister._id };
         const token = await this.jwtService.sign( tokenPayload );
 
-        return { token };
+        const userResponse: UserResponse = {
+            email: userRegister.email,
+            id: userRegister._id,
+            name: userRegister.name,
+            boards: userRegister.boards,
+            imageAvatar: userRegister.imageAvatar,
+        }
+
+        return {
+            token,
+            user: userResponse,
+        };
     }
 }
