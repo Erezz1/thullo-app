@@ -42,7 +42,7 @@ export default ( req: NextApiRequest, res: NextApiResponse ) => NextAuth( req, r
     ],
 
     callbacks: {
-        jwt: async ({ token, user }) => {
+        jwt: async ({ token, user }: any ) => {
             if ( user ) {
                 token.accessToken = user.token;
             }
@@ -50,7 +50,7 @@ export default ( req: NextApiRequest, res: NextApiResponse ) => NextAuth( req, r
             return token;
         },
 
-        session: async ({ session, token }) => {
+        session: async ({ session, token }: any ) => {
             session.accessToken = token.accessToken;
             return session;
         }

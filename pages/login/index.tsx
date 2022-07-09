@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import type { NextPage } from 'next';
-import { Box } from '@chakra-ui/react';
+import { Box, useToast } from '@chakra-ui/react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
@@ -13,28 +13,39 @@ const Login: NextPage = () => {
 
     // Estado para verificar si el usuario se esta registrando o logueando
     const [ isLogging, setIsLogging ] = useState<boolean>( true );
+    const toast = useToast();
 
-    // Obtenemos la sesion del usuario y si esta logueado se redirige a la pagina principal
-    const router = useRouter();
+    const { push, query } = useRouter();
+
+    // Valida si ha habido algun error al loguearse
+    useEffect(() => {
+        if ( Object.keys( query ).length > 0 ) {
+            toast({
+                title: `Error #${ query.error }`,
+                description: query.message,
+                status: 'warning',
+                duration: 5000,
+                isClosable: true,
+            })
+        }
+    }, [ query ])
+
+    // Valida si el usuario esta logueado, en caso de ser asi, lo redirige a la pagina de 'boards'
     const { status } = useSession();
     if ( status === 'authenticated' ) {
-        router.push('/boards');
+        push('/boards');
     }
-
-    // Funciones para cambiar el estado de isLogging
-    const register = () => setIsLogging( false );
-    const login = () => setIsLogging( true );
 
     // Se valida el estado de la sesion, si se esta verificando la sesion del usuario se muestra el loading
     if ( status === 'loading' ) {
-        return <Loading message="Validando sesion" />
+        return <Loading message="Validando sesión" />
     }
 
     return (
         <>
         <Head>
             <title>
-                { isLogging ? 'Inicia Sesion' : 'Registrate' } | Thullo
+                { isLogging ? 'Inicia Sesión' : 'Registrate' } | Thullo
             </title>
         </Head>
 
@@ -48,8 +59,8 @@ const Login: NextPage = () => {
         >
             {
                 isLogging
-                    ? <LoginForm onRegister={ register } />
-                    : <RegisterForm onLogin={ login } />
+                    ? <LoginForm onRegister={ () => setIsLogging( false ) } />
+                    : <RegisterForm onLogin={ () => setIsLogging( true ) } />
             }
         </Box>
         </>

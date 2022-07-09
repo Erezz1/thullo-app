@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Image from 'next/image';
 import { signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
@@ -41,12 +42,14 @@ const LoginForm = ({ onRegister }: IProps ) => {
     const { register: reg, handleSubmit, formState: { errors } } = useForm<IFormInputs>({
         resolver: yupResolver( schema ),
     });
+    const [ isLoading, setIsLoading ] = useState<boolean>( false );
 
     // Estado de los errores del formulario
     useFormErrors( errors );
 
     // Funcion para enviar el formulario
     const onSubmit = async ( data: IFormInputs ) => {
+        setIsLoading( true );
         await signIn('credentials', {
             email: data.email,
             password: data.password,
@@ -91,6 +94,7 @@ const LoginForm = ({ onRegister }: IProps ) => {
                 size="sm"
                 w="full"
                 type="submit"
+                isLoading={ isLoading }
             >Iniciar sesión</Button>
 
             <Text
@@ -105,6 +109,7 @@ const LoginForm = ({ onRegister }: IProps ) => {
                     onClick={ onRegister }
                     ml="2"
                     fontSize="sm"
+                    isLoading={ isLoading }
                 >Registrate!</Button>
             </Text>
         </Box>

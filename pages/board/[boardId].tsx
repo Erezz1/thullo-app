@@ -1,8 +1,6 @@
 import { useEffect } from 'react';
 import type { NextPage } from 'next';
 import dynamic from 'next/dynamic';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
 import {
     Box,
     useToast
@@ -10,7 +8,7 @@ import {
 
 import Layout from '@/components/layout';
 import BoardContainer from './components/board-container';
-import { useWindowSize } from 'hooks';
+import { useAuth, useWindowSize } from 'hooks';
 
 const MembersList = dynamic( () => import(/* webpackChunkName: "members-list" */ './components/members-list') );
 const BoardDetails = dynamic( () => import(/* webpackChunkName: "board-details" */ './components/board-details') );
@@ -21,15 +19,8 @@ const Board: NextPage = () => {
     const toast = useToast();
     const { windowSize } = useWindowSize();
 
-    // Obtenemos la sesion del usuario y si no esta autenticado redirigimos a la pagina de login
-    const router = useRouter();
-    const { data: session } = useSession({
-        required: true,
-        onUnauthenticated: () => {
-            router.push('/login');
-        }
-    });
-    console.log( session?.accessToken );
+    // Valida si el usuario esta autenticado
+    useAuth();
 
     // Valida si el usuario esta en una resolución de escritorio
     useEffect(() => {

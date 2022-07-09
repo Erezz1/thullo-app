@@ -1,6 +1,8 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { createStandaloneToast } from '@chakra-ui/toast';
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL;
+const toast = createStandaloneToast();
 
 // Crea una instancia de axios
 const axiosInstance = axios.create({
@@ -21,26 +23,42 @@ axiosInstance.interceptors.request.use(
 
         // Valida que haya headers y, en caso de que si, agrega el token
         if ( config.headers ) {
-            const token = localStorage.getItem('token') || '';
+            const token = JSON.parse( localStorage.getItem('token') || '' );
             config.headers.Authorization = `Bearer ${ token }`;
         }
 
         return config;
     },
     ( error ) => {
-        // Si hay un error, lo marca en la consola
-        return Promise.reject( error );
+        // Si hay un error al hacer la peticion, lo marca en la consola y muestra un toast
+        toast({
+            title: `Error`,
+            status: 'error',
+            description: 'Ocurrió un error al recibir la respuesta',
+            duration: 5000,
+            isClosable: true,
+        });
+        return console.error( error );
     }
 );
 
 // Interceptor para validar el status de la respuesta
 axiosInstance.interceptors.response.use(
     ( response: AxiosResponse ) => {
-        // Do something with response data
         return response;
     },
     ( error ) => {
-        // Do something with response error
+        // Muestra una alerta en caso de que haya un error en la respuesta
+        if ( error.response.status < 200 || error.response.status >= 300 ) {
+            toast({
+                title: `Error #${ error.response.status }`,
+                status: 'warning',
+                description: error.response.data.message || error.response.statusText,
+                duration: 5000,
+                isClosable: true,
+            });
+        }
+
         return Promise.reject( error );
     }
 );

@@ -1,23 +1,42 @@
+import { useEffect, useState } from 'react';
 import type { AppProps } from 'next/app';
 import { SessionProvider } from 'next-auth/react';
 import { ChakraProvider } from '@chakra-ui/react';
-import { Provider } from 'react-redux';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 
-import store from '../redux/store';
+import Loading from '@/components/loading';
+import axiosInstance from '@/client/axiosInstance';
 import '../styles/global.css';
+
+const queryClient = new QueryClient();
 
 const MyApp = ({
     Component,
     pageProps: { session, ...pageProps },
 }: AppProps ) => {
 
+    const [ isLoading, setIsLoading ] = useState<boolean>( true );
+
+    useEffect(() => {
+        axiosInstance.get('/api').then(
+            () => setIsLoading( false )
+        );
+    }, []);
+
+    if ( isLoading ) {
+        return <Loading message="Despertando el servidor..." />
+    }
+
     return (
         <SessionProvider session={ session }>
-            <Provider store={ store }>
+            <QueryClientProvider client={ queryClient }>
                 <ChakraProvider>
                     <Component { ...pageProps } />
                 </ChakraProvider>
-            </Provider>
+
+                <ReactQueryDevtools initialIsOpen={ false } />
+            </QueryClientProvider>
         </SessionProvider>
     )
 }

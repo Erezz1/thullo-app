@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Image from 'next/image';
 import { signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
@@ -54,25 +55,32 @@ const RegisterForm = ({ onLogin }: IProps ) => {
     const { register, handleSubmit, formState: { errors } } = useForm<IFormInputs>({
         resolver: yupResolver( schema ),
     });
+    const [ isLoading, setIsLoading ] = useState<boolean>( false );
 
     // Estado de los errores del formulario
     useFormErrors( errors );
 
-
     // Funcion para enviar el formulario
-    const onSubmit = async ( data: IFormInputs ) => {
-        const { data: response } = await axiosInstance.post('/user/create', {
-            name: data.name,
-            email: data.email,
-            password: data.password,
-            imageAvatar: ''
-        });
-
-        await signIn('credentials', {
-            email: response.user.email,
-            password: data.password,
-            callbackUrl: '/boards',
-        });
+    const onSubmit = ( data: IFormInputs ) => {
+        setIsLoading( true );
+        axiosInstance
+            .post('/user/create', {
+                name: data.name,
+                email: data.email,
+                password: data.password,
+                imageAvatar: 'https://i.pravatar.cc/100'
+            })
+            .then(() => {
+                signIn('credentials', {
+                    email: data.email,
+                    password: data.password,
+                    callbackUrl: '/boards',
+                });
+            })
+            .catch( error => {
+                console.log( error );
+                setIsLoading( false );
+            });
     }
 
     return (
@@ -126,6 +134,7 @@ const RegisterForm = ({ onLogin }: IProps ) => {
                 size="sm"
                 w="full"
                 type="submit"
+                isLoading={ isLoading }
             >Iniciar sesión</Button>
 
             <Text
@@ -140,6 +149,7 @@ const RegisterForm = ({ onLogin }: IProps ) => {
                     onClick={ onLogin }
                     ml="2"
                     fontSize="sm"
+                    isLoading={ isLoading }
                 >Inicia sesion!</Button>
             </Text>
         </Box>

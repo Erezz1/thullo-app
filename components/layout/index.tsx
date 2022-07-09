@@ -16,7 +16,7 @@ const Layout = ({ children, title }: IProps ) => {
     // Se valida el estado de la sesion, si se esta verificando la sesion del usuario se muestra el loading
     const { status } = useSession();
     if ( status === 'loading' ) {
-        return <Loading message="Validando sesion" />
+        return <Loading message="Validando sesión" />
     }
 
     return (

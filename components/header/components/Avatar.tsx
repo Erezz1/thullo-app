@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import {
     Menu,
     MenuButton,
@@ -7,11 +8,17 @@ import {
     Avatar as ImageAvatar,
     Icon,
     Button
-} from '@chakra-ui/react'
+} from '@chakra-ui/react';
 import { signOut } from 'next-auth/react';
+import { useQuery } from 'react-query';
 import { IoIosArrowDown, IoMdExit } from 'react-icons/io';
 
+import axiosInstance from '@/client/axiosInstance';
+
 const Avatar = () => {
+
+    const router = useRouter();
+    const { data, isLoading, error } = useQuery('user', () => axiosInstance.get('/user'));
 
     const handleLogout = () => {
         signOut({ callbackUrl: '/login' });
@@ -43,7 +50,9 @@ const Avatar = () => {
             </Box>
 
             <MenuList as="nav">
-                <MenuItem>Mis tableros</MenuItem>
+                <MenuItem
+                    onClick={ () => router.push('/boards') }
+                >Mis tableros</MenuItem>
 
                 <MenuItem onClick={ handleLogout }>
                     Cerrar sesion
