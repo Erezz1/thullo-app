@@ -2,7 +2,7 @@ import { Module, NestModule, MiddlewareConsumer, RequestMethod } from '@nestjs/c
 import { MongooseModule } from '@nestjs/mongoose';
 import { JwtModule } from '@nestjs/jwt';
 
-import { ExistEmailMiddleware } from './middlewares';
+import { ExistEmailMiddleware,ValidateUserMiddleware } from './middlewares';
 
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
@@ -28,5 +28,9 @@ export class UserModule implements NestModule {
         consumer
             .apply( ExistEmailMiddleware )
             .forRoutes({ path: 'user/create', method: RequestMethod.POST });
+
+        consumer
+            .apply( ValidateUserMiddleware )
+            .forRoutes({ path: 'user/:userId', method: RequestMethod.GET });
     }
 }

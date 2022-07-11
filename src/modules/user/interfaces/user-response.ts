@@ -5,3 +5,9 @@ export interface UserResponse {
     boards: string[];
     imageAvatar: string;
 }
+
+export interface UserFound {
+    name: string;
+    id: string;
+    imageAvatar: string;
+}
