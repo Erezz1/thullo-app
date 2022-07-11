@@ -2,8 +2,13 @@ import { useRouter } from 'next/router';
 import { Box, Image, Text } from '@chakra-ui/react';
 
 import MembersList from './MembersList';
+import { IBoard } from 'types';
 
-const BoardItem = () => {
+interface IProps {
+    board: IBoard
+}
+
+const BoardItem = ({ board }: IProps ) => {
 
     const router = useRouter();
 
@@ -15,10 +20,10 @@ const BoardItem = () => {
             shadow="md"
             cursor="pointer"
             isTruncated
-            onClick={() => router.push(`/board/1`)}
+            onClick={() => router.push(`/board/${ board.id }`)}
         >
             <Image
-                src="https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1472&q=80"
+                src={ board?.cover }
                 alt="cover"
                 w="100%"
                 h="36"
@@ -31,10 +36,10 @@ const BoardItem = () => {
                 my="2"
                 isTruncated
             >
-                Devchallenge Board
+                { board?.name }
             </Text>
 
-            <MembersList />
+            <MembersList members={ board.members }/>
         </Box>
     )
 }

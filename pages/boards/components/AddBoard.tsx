@@ -1,3 +1,5 @@
+import { FormEventHandler, useState } from 'react';
+import { useMutation } from 'react-query';
 import {
     Button,
     Icon,
@@ -8,20 +10,43 @@ import {
     ModalOverlay,
     Image,
     Input,
-    Select,
 } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
 import { AiOutlineClose } from 'react-icons/ai';
 import { IoMdAdd } from 'react-icons/io';
 
 import CoverMenu from './CoverMenu';
+import { createBoard } from 'utils';
+
+interface IProps {
+    isOpen: boolean;
+    onClose: () => void;
+}
 
 const AddBoard = ({ isOpen, onClose }: IProps ) => {
+
+    const [ name, setName ] = useState<string>('');
+    const [ cover, setCover ] = useState<string>('');
+
+    const router = useRouter();
+
+    const { isLoading, mutate } = useMutation( createBoard, {
+        onSuccess: data => router.push(`/board/${ data.id }`)
+    });
+
+    const handleSubmit: FormEventHandler<HTMLDivElement> = async ( event ) => {
+        event.preventDefault();
+        await mutate({ name, cover });
+    }
 
     return (
         <Modal isOpen={ isOpen } onClose={ onClose }>
             <ModalOverlay />
 
-            <ModalContent>
+            <ModalContent
+                as="form"
+                onSubmit={ handleSubmit }
+            >
                 <ModalBody
                     width="100%"
                     pt="5"
@@ -39,7 +64,7 @@ const AddBoard = ({ isOpen, onClose }: IProps ) => {
                     </Button>
 
                     <Image
-                        src="https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1472&q=80"
+                        src={ cover }
                         alt="cover"
                         w="100%"
                         h="24"
@@ -56,17 +81,29 @@ const AddBoard = ({ isOpen, onClose }: IProps ) => {
                         border="none"
                         boxShadow="0px 2px 7px rgba(0, 0, 0, 0.1)"
                         mb="5"
+                        value={ name }
+                        onChange={ e => setName( e.target.value ) }
+                        disabled={ isLoading }
                     />
 
-                    <CoverMenu />
+                    <CoverMenu setCover={ setCover } />
                 </ModalBody>
 
                 <ModalFooter>
-                    <Button variant="ghost" onClick={ onClose }>
+                    <Button
+                        variant="ghost"
+                        onClick={ onClose }
+                        isLoading={ isLoading }
+                    >
                         Cancelar
                     </Button>
 
-                    <Button colorScheme="blue" ml={3} onClick={ onClose }>
+                    <Button
+                        colorScheme="blue"
+                        ml={3}
+                        isLoading={ isLoading }
+                        type="submit"
+                    >
                         <Icon as={ IoMdAdd } fontSize="lg" mr="1" />
                         Crear
                     </Button>
@@ -74,11 +111,6 @@ const AddBoard = ({ isOpen, onClose }: IProps ) => {
             </ModalContent>
         </Modal>
     )
-}
-
-interface IProps {
-    isOpen: boolean;
-    onClose: () => void;
 }
 
 export default AddBoard;

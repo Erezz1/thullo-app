@@ -1,4 +1,9 @@
-import { Button, Input, InputGroup, InputRightElement } from '@chakra-ui/react';
+import {
+    Button,
+    Input,
+    InputGroup,
+    InputRightElement
+} from '@chakra-ui/react';
 
 const Seeker = () => {
     return (

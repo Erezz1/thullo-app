@@ -53,7 +53,10 @@ axiosInstance.interceptors.response.use(
             toast({
                 title: `Error #${ error.response.status }`,
                 status: 'warning',
-                description: error.response.data.message || error.response.statusText,
+                description:
+                    error.response.data.message === 'Unauthorized'
+                        ? 'No tienes permisos para realizar esta acción'
+                        : error.response.data.message || error.response.statusText,
                 duration: 5000,
                 isClosable: true,
             });

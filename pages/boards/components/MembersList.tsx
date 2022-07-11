@@ -1,11 +1,28 @@
+import { useEffect, useState } from 'react';
 import { Box, Text } from '@chakra-ui/react';
+
 import MemberItem from './MemberItem';
+import { IUser } from 'types';
+import { useQuery } from 'react-query';
+import { getAllUsers } from 'utils';
 
-const MembersList = () => {
+interface IProps {
+    members: string[];
+}
 
-    const members = [
-        1,2,3
-    ];
+const MembersList = ({ members: membersId }: IProps ) => {
+
+    const [ members, setMembers ] = useState<IUser[]>([]);
+    const [ restOfMembers, setRestOfMembers ] = useState<IUser[]>([]);
+
+    useQuery(['users'], () => getAllUsers( membersId ), {
+        onSuccess: data => {
+            setMembers( data.slice(0, 3) );
+            setRestOfMembers( data.slice(3) );
+        },
+        retry: false,
+        refetchOnWindowFocus: false,
+    });
 
     return (
         <Box
@@ -17,16 +34,23 @@ const MembersList = () => {
         >
             {
                 members.map( member => (
-                    <MemberItem key={ member } />
+                    <MemberItem
+                        key={ member.id }
+                        member={ member }
+                    />
                 ))
             }
-            <Text
-                as="span"
-                fontSize="sm"
-                color="gray.500"
-            >
-                +5 Otros
-            </Text>
+            {
+                restOfMembers?.length > 0 && (
+                    <Text
+                        as="span"
+                        fontSize="sm"
+                        color="gray.500"
+                    >
+                        +{ restOfMembers.length } Otros
+                    </Text>
+                )
+            }
         </Box>
     )
 }

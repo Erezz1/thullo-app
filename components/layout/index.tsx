@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { useSession } from 'next-auth/react';
 import { Box } from '@chakra-ui/react';
 
+import { UserProvider } from 'context/providers';
 import Header from '../header';
 import Loading from '../loading';
 
@@ -20,19 +21,19 @@ const Layout = ({ children, title }: IProps ) => {
     }
 
     return (
-        <>
+        <UserProvider>
             <Head>
                 <title>{ title } | Thullo</title>
             </Head>
 
             <Box
-                height="100vh"
+                minH="100vh"
                 width="100%"
             >
                 <Header />
                 { children }
             </Box>
-        </>
+        </UserProvider>
     )
 }
 

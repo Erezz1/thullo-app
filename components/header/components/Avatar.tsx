@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import { useRouter } from 'next/router';
 import {
     Menu,
@@ -10,16 +11,17 @@ import {
     Button
 } from '@chakra-ui/react';
 import { signOut } from 'next-auth/react';
-import { useQuery } from 'react-query';
 import { IoIosArrowDown, IoMdExit } from 'react-icons/io';
 
-import axiosInstance from '@/client/axiosInstance';
+import { UserContext } from 'context/contexts';
 
 const Avatar = () => {
 
+    // Obtiene el contexto de usuario y el router
+    const user = useContext( UserContext );
     const router = useRouter();
-    const { data, isLoading, error } = useQuery('user', () => axiosInstance.get('/user'));
 
+    // Redirige al usuario a la página de login y cierra la sesión
     const handleLogout = () => {
         signOut({ callbackUrl: '/login' });
     }
@@ -33,9 +35,8 @@ const Avatar = () => {
                 gap="2"
             >
                 <ImageAvatar
-                    name="Dan Abrahmov"
-                    src="https://bit.ly/dan-abramov"
-                    rounded="xl"
+                    name={ user?.name }
+                    src={ user?.imageAvatar }
                     w="10"
                     h="10"
                 />
@@ -44,7 +45,7 @@ const Avatar = () => {
                     as={ Button }
                     variant="ghost"
                 >
-                    Dan Abrahmov
+                    { user?.name }
                     <Icon ml="2" as={ IoIosArrowDown } />
                 </MenuButton>
             </Box>

@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction, useEffect } from 'react';
 import {
     Box,
     Button,
@@ -9,6 +10,10 @@ import {
     useRadioGroup,
 } from '@chakra-ui/react'
 import { BsFillImageFill } from 'react-icons/bs'
+
+interface ICoverProps {
+    setCover: Dispatch<SetStateAction<string>>;
+}
 
 const options = [
     'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1472&q=80',
@@ -28,9 +33,9 @@ const CoverOption = ( props: any ) => {
 
     return (
         <Box as="label" w="full">
-            <input {...input} />
+            <input { ...input } />
             <Box
-                {...checkbox}
+                { ...checkbox }
                 cursor="pointer"
                 borderWidth="1px"
                 borderRadius="md"
@@ -50,15 +55,21 @@ const CoverOption = ( props: any ) => {
     )
 }
 
-const CoverMenu = () => {
+const CoverMenu = ({ setCover }: ICoverProps ) => {
 
+    // Permite seleccionar una imagen de una lista de opciones
     const { getRootProps, getRadioProps } = useRadioGroup({
         name: 'cover',
         defaultValue: options[0],
-        // onChange: console.log,
+        onChange: e => setCover( e ),
     })
 
-    const group = getRootProps()
+    const group = getRootProps();
+
+    // Da por defecto la primera imagen de la lista
+    useEffect(() => {
+        setCover( options[0] );
+    }, []);
 
     return (
         <Menu>
