@@ -8,14 +8,17 @@ import { getAllUsers } from 'utils';
 
 interface IProps {
     members: string[];
+    boardId: string;
 }
 
-const MembersList = ({ members: membersId }: IProps ) => {
+const MembersList = ({ members: membersId, boardId }: IProps ) => {
 
+    // Estado de los miembros
     const [ members, setMembers ] = useState<IUser[]>([]);
     const [ restOfMembers, setRestOfMembers ] = useState<IUser[]>([]);
 
-    useQuery(['users'], () => getAllUsers( membersId ), {
+    // Obtiene los miembros de un tablero
+    useQuery(['membersBoard', boardId ], () => getAllUsers( membersId ), {
         onSuccess: data => {
             setMembers( data.slice(0, 3) );
             setRestOfMembers( data.slice(3) );

@@ -109,7 +109,7 @@ const LoginForm = ({ onRegister }: IProps ) => {
                     onClick={ onRegister }
                     ml="2"
                     fontSize="sm"
-                    isLoading={ isLoading }
+                    disabled={ isLoading }
                 >Registrate!</Button>
             </Text>
         </Box>

@@ -25,17 +25,24 @@ interface IProps {
 
 const AddBoard = ({ isOpen, onClose }: IProps ) => {
 
+    // Estado de los inputs
     const [ name, setName ] = useState<string>('');
     const [ cover, setCover ] = useState<string>('');
 
+    // Obtiene el router
     const router = useRouter();
 
+    // Mutation para crear un tablero
     const { isLoading, mutate } = useMutation( createBoard, {
         onSuccess: data => router.push(`/board/${ data.id }`)
     });
 
+    // Función que se ejecuta al hacer click en el botón de crear
     const handleSubmit: FormEventHandler<HTMLDivElement> = async ( event ) => {
         event.preventDefault();
+
+        if ( name.length < 3 ) return;
+
         await mutate({ name, cover });
     }
 
@@ -93,7 +100,7 @@ const AddBoard = ({ isOpen, onClose }: IProps ) => {
                     <Button
                         variant="ghost"
                         onClick={ onClose }
-                        isLoading={ isLoading }
+                        disabled={ isLoading }
                     >
                         Cancelar
                     </Button>

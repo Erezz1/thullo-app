@@ -149,7 +149,7 @@ const RegisterForm = ({ onLogin }: IProps ) => {
                     onClick={ onLogin }
                     ml="2"
                     fontSize="sm"
-                    isLoading={ isLoading }
+                    disabled={ isLoading }
                 >Inicia sesion!</Button>
             </Text>
         </Box>

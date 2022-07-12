@@ -39,7 +39,10 @@ const BoardItem = ({ board }: IProps ) => {
                 { board?.name }
             </Text>
 
-            <MembersList members={ board.members }/>
+            <MembersList
+                members={ board.members }
+                boardId={ board.id }
+            />
         </Box>
     )
 }

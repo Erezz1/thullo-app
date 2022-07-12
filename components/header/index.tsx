@@ -3,7 +3,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Box } from '@chakra-ui/react';
 
-import Seeker from './components/Seeker';
 import Avatar from './components/Avatar';
 
 import logo from '@/public/images/Logo.svg';
@@ -39,7 +38,6 @@ const Header = () => {
                 gap={["5", "10"]}
                 mt={["5", "5", "0"]}
             >
-                <Seeker />
                 <Avatar />
             </Box>
         </Box>

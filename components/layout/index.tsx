@@ -3,7 +3,6 @@ import Head from 'next/head';
 import { useSession } from 'next-auth/react';
 import { Box } from '@chakra-ui/react';
 
-import { UserProvider } from 'context/providers';
 import Header from '../header';
 import Loading from '../loading';
 
@@ -21,7 +20,7 @@ const Layout = ({ children, title }: IProps ) => {
     }
 
     return (
-        <UserProvider>
+        <>
             <Head>
                 <title>{ title } | Thullo</title>
             </Head>
@@ -33,7 +32,7 @@ const Layout = ({ children, title }: IProps ) => {
                 <Header />
                 { children }
             </Box>
-        </UserProvider>
+        </>
     )
 }
 

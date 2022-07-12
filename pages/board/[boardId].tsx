@@ -1,39 +1,40 @@
-import { useEffect } from 'react';
-import type { NextPage } from 'next';
+import type { GetServerSideProps, NextPage } from 'next';
 import dynamic from 'next/dynamic';
-import {
-    Box,
-    useToast
-} from '@chakra-ui/react';
+import { useRouter } from 'next/router';
+import { useQuery } from 'react-query';
+import { Box } from '@chakra-ui/react';
 
 import Layout from '@/components/layout';
 import BoardContainer from './components/board-container';
-import { useAuth, useWindowSize } from 'hooks';
+import { useAuth, useValidateWindowSize } from 'hooks';
+import { getBoardById } from 'utils';
 
 const MembersList = dynamic( () => import(/* webpackChunkName: "members-list" */ './components/members-list') );
 const BoardDetails = dynamic( () => import(/* webpackChunkName: "board-details" */ './components/board-details') );
 
-const Board: NextPage = () => {
+interface IProps {
+    boardId: string;
+}
 
-    // Obtenemos la funcion para mostrar el componente toast y el tamaño de la ventana
-    const toast = useToast();
-    const { windowSize } = useWindowSize();
+const Board: NextPage<IProps> = ({ boardId }) => {
+
+   const { push } = useRouter();
+
+    const { data: board } = useQuery(
+        ['board', boardId ],
+        () => getBoardById( boardId ),
+        {
+            retry: false,
+            refetchOnWindowFocus: false,
+        }
+    );
 
     // Valida si el usuario esta autenticado
     useAuth();
 
-    // Valida si el usuario esta en una resolución de escritorio
-    useEffect(() => {
-        if ( windowSize.width < 992 && windowSize.width > 200 ) {
-            toast({
-                title: '¡Atención!',
-                description: 'Para una mejor experiencia, utiliza una laptop o una computadora de escritorio.',
-                status: 'warning',
-                duration: 5000,
-                isClosable: true,
-            })
-        }
-    }, [ windowSize, toast ]);
+    useValidateWindowSize({
+        message: 'Para una mejor experiencia, utiliza una laptop o una computadora de escritorio.',
+    })
 
     return (
         <Layout title="Hola">
@@ -52,5 +53,11 @@ const Board: NextPage = () => {
         </Layout>
     )
 }
+
+export const getServerSideProps: GetServerSideProps = async ( context ) => ({
+    props: {
+        boardId: context.query.boardId,
+    }
+})
 
 export default Board;
