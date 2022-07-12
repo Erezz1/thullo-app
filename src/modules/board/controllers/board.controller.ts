@@ -21,6 +21,8 @@ export class BoardController {
             cover: boardFound.cover,
             members: boardFound.members,
             lists: boardFound.lists,
+            description: boardFound.description,
+            admins: boardFound.admins,
         }
 
         return boardResponse;
@@ -48,6 +50,8 @@ export class BoardController {
             cover: boardCreated.cover,
             members: boardCreated.members,
             lists: boardCreated.lists,
+            description: boardCreated.description,
+            admins: boardCreated.admins,
         }
 
         return boardResponse;
@@ -60,8 +64,8 @@ export class BoardController {
         @Param('boardId') boardId: string,
         @Body() board: UpdateBoardDto,
     ): Promise<boardResponse> {
-        const { name } = board;
-        const boardUpdated = await this.boardService.updateNameBoard( boardId, name );
+        const { name, description } = board;
+        const boardUpdated = await this.boardService.updateNameBoard( boardId, name, description );
 
         const boardResponse: boardResponse = {
             id: boardUpdated._id,
@@ -69,6 +73,8 @@ export class BoardController {
             cover: boardUpdated.cover,
             members: boardUpdated.members,
             lists: boardUpdated.lists,
+            description: boardUpdated.description,
+            admins: boardUpdated.admins,
         }
 
         return boardResponse;

@@ -31,6 +31,12 @@ export class Board {
         type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'List' }],
     })
     lists: List[];
+
+    @Prop({
+        default: '',
+        type: String,
+    })
+    description: string;
 }
 
 export const BoardSchema = SchemaFactory.createForClass( Board );

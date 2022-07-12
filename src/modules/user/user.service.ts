@@ -24,6 +24,10 @@ export class UserService {
         return createdUser;
     }
 
+    async getUserByQueries( name: string = '' ): Promise<any> {
+        return await this.userModel.find({ name: { $regex: name, $options: 'i' } });
+    }
+
     async getUserByEmail( email: string ): Promise<any> {
         return await this.userModel.findOne({ email });
     }

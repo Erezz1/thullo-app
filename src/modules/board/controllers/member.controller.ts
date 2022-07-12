@@ -28,12 +28,14 @@ export class MemberController {
             cover: boardUpdated.cover,
             members: boardUpdated.members,
             lists: boardUpdated.lists,
+            description: boardUpdated.description,
+            admins: boardUpdated.admins,
         }
 
         return boardResponse;
     }
 
-    @Delete('/:boardId')
+    @Put('/delete/:boardId')
     @UseGuards( MemberGuard )
     @UseGuards( AdminGuard )
     async removeMember(
@@ -56,6 +58,8 @@ export class MemberController {
             cover: boardUpdated.cover,
             members: boardUpdated.members,
             lists: boardUpdated.lists,
+            description: boardUpdated.description,
+            admins: boardUpdated.admins,
         }
 
         return boardResponse;
@@ -77,6 +81,8 @@ export class MemberController {
             cover: boardUpdated.cover,
             members: boardUpdated.members,
             lists: boardUpdated.lists,
+            description: boardUpdated.description,
+            admins: boardUpdated.admins,
         }
 
         return boardResponse;
@@ -105,6 +111,8 @@ export class MemberController {
             cover: boardUpdated.cover,
             members: boardUpdated.members,
             lists: boardUpdated.lists,
+            description: boardUpdated.description,
+            admins: boardUpdated.admins,
         }
 
         return boardResponse;

@@ -32,8 +32,15 @@ export class BoardService {
         return boardCreated;
     }
 
-    async updateNameBoard( boardId: string, newName: string ): Promise<any> {
-        const boardUpdated = await this.boardModel.findByIdAndUpdate( boardId, { name: newName }, { new: true });
+    async updateNameBoard( boardId: string, newName: string, newDescription: string ): Promise<any> {
+        const boardUpdated = await this.boardModel.findByIdAndUpdate( 
+            boardId,
+            {
+                name: newName,
+                description: newDescription,
+            },
+            { new: true }
+        );
         return boardUpdated;
     }
 

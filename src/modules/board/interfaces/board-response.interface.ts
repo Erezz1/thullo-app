@@ -4,4 +4,6 @@ export interface boardResponse {
     cover: string;
     members: string[];
     lists: string[];
+    description: string;
+    admins: string[];
 }

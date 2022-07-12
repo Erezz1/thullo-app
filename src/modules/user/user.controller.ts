@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Request, NotFoundException } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Request, NotFoundException, Query } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 import { UserService } from './user.service';
@@ -44,6 +44,20 @@ export class UserController {
         }
 
         return userResponse;
+    }
+
+    @Public()
+    @Get('/find/search')
+    async getUserByQueries(@Query() query: { name?: string } ): Promise<UserFound[]> {
+        const users = await this.userService.getUserByQueries( query.name );
+
+        const usersResponse: UserFound[] = users.map(( user: any ) => ({
+            name: user.name,
+            id: user._id,
+            imageAvatar: user.imageAvatar,
+        }))
+
+        return usersResponse;
     }
 
     @Public()
