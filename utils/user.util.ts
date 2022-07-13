@@ -22,3 +22,9 @@ export const getUserAuth = async (): Promise<IUserLogged> => {
     const user = await axiosInstance.get<IUserLogged>('/user');
     return user.data;
 }
+
+// Obtiene usuarios buscando por su nombre
+export const getUsersByQueries = async ( queryName: string ): Promise<IUser[]> => {
+    const { data } = await axiosInstance.get<IUser[]>(`/user/find/search?name=${ queryName }`);
+    return data;
+}

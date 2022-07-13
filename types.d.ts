@@ -17,5 +17,7 @@ export interface IBoard {
     name: string;
     cover: string;
     members: string[];
+    admins: string[];
     lists: string[];
+    description: string;
 }

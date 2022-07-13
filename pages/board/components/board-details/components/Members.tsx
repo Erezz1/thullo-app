@@ -1,3 +1,5 @@
+import { useContext } from 'react';
+import { useMutation, useQueryClient } from 'react-query';
 import {
     Avatar,
     Box,
@@ -8,12 +10,40 @@ import {
 import { BsPeopleFill } from 'react-icons/bs';
 
 import { Members } from '../../../interfaces';
+import { deleteMemberFromBoard } from 'utils';
+import { BoardContext, UserContext } from 'contexts/context';
 
 interface IProps {
     members: Members;
 }
 
 const Members = ({ members }: IProps ) => {
+
+    // Obtiene el estado del tablero, el usuario y el query client
+    const queryClient = useQueryClient();
+    const board = useContext( BoardContext );
+    const user = useContext( UserContext );
+
+    const userIsAdmin = board.admins?.includes( user?.id || '' );
+
+    // Mutacion para eliminar un miembro de un tablero
+    const { mutate, isLoading } = useMutation(
+        ( userId: string ) => deleteMemberFromBoard( board.id, userId )
+    );
+
+    // Elimina un miembro de un tablero y actualiza el estado del tablero y miembros
+    const handleDelete = ( userId: string ) => {
+        mutate(
+            userId,
+            {
+                onSuccess: data => {
+                    queryClient.setQueryData(['board', board.id ], data.members );
+                    queryClient.invalidateQueries(['members', board.id ]);
+                    queryClient.invalidateQueries(['board', board.id ]);
+                }
+            }
+        );
+    }
 
     return (
         <>
@@ -46,7 +76,6 @@ const Members = ({ members }: IProps ) => {
                             <Avatar
                                 name={ member.name }
                                 src={ member.image }
-                                rounded="lg"
                                 size="sm"
                             />
                             <Text
@@ -66,10 +95,12 @@ const Members = ({ members }: IProps ) => {
                                 >
                                     Admin
                                 </Text>
-                                : <Button
+                                : userIsAdmin && <Button
                                     variant="outline"
                                     colorScheme="red"
                                     size="xs"
+                                    onClick={ () => handleDelete( member.id ) }
+                                    isLoading={ isLoading }
                                 >
                                     Remover
                                 </Button>

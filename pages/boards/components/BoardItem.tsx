@@ -1,16 +1,33 @@
+import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
-import { Box, Image, Text } from '@chakra-ui/react';
+import {
+    Box,
+    Image,
+    Text
+} from '@chakra-ui/react';
 
 import MembersList from './MembersList';
-import { IBoard } from 'types';
+import { getBoardById } from 'utils';
 
 interface IProps {
-    board: IBoard
+    boardId: string;
 }
 
-const BoardItem = ({ board }: IProps ) => {
+const BoardItem = ({ boardId }: IProps ) => {
 
     const router = useRouter();
+
+    // Obtiene un tablero por su id
+    const { data: board } = useQuery(
+        ['board', boardId ],
+        () => getBoardById( boardId ),
+        { retry: false }
+    );
+
+    // Si no existe el tablero, no se muestra nada
+    if ( !board ) {
+        return null;
+    }
 
     return (
         <Box
@@ -20,7 +37,7 @@ const BoardItem = ({ board }: IProps ) => {
             shadow="md"
             cursor="pointer"
             isTruncated
-            onClick={() => router.push(`/board/${ board.id }`)}
+            onClick={() => router.push(`/board/${ board?.id }`)}
         >
             <Image
                 src={ board?.cover }
@@ -40,8 +57,8 @@ const BoardItem = ({ board }: IProps ) => {
             </Text>
 
             <MembersList
-                members={ board.members }
-                boardId={ board.id }
+                members={ board?.members }
+                boardId={ board?.id }
             />
         </Box>
     )

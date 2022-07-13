@@ -1,30 +1,69 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { FormEvent, useContext, useState } from 'react';
+import { useMutation, useQueryClient } from 'react-query';
 import { Button, Icon, Text, Textarea } from '@chakra-ui/react';
 import { MdDescription } from 'react-icons/md';
 
-const descriptionS = `Simple board to start on a project.
+import { updateBoard } from 'utils';
+import { BoardContext } from 'contexts/context';
 
-Each list can hold items (cards) that represent ideas or tasks.
+interface IProps {
+    description: string;
+}
 
-There 4 lists here:
+const descriptionDefault = `Agrega una breve descripción de tu tablero. 📘🖋
+Cada lista tiene un objetivo diferente.
 
-* Backlog 🤔 : Ideas are created here. Here people can describe the idea following three simple questions: Why you wish to do it, What it is, how can you do it.
+Aquí hay 4 ejemplos de listas:
 
-* In Progress📚: Once the ideas is clearly defined, the task can move to #todo stage. Here the owner of the idea can move to #doing once s/he is ready. He can also wait a bit for other members to join.
-* In Review ⚙️: On-going
-* Completed 🙌🏽**: Finished`;
+* Tareas 🗒: Tareas que deben ser realizadas, como: hacer las compras, iniciar el proyecto, etc.
 
-const Description = () => {
+* En proceso 🏃: Tareas que ya están siendo realizadas.
 
+* En revisión ⚙: Tareas que han sido completadas, pero requieren una revisión.
+
+* Completadas 🙌: Tareas que ya fueron completadas y revisadas.`;
+
+const Description = ({ description }: IProps ) => {
+
+    // Se obtiene el estado del tablero y el query client
+    const queryClient = useQueryClient();
+    const board = useContext( BoardContext );
+
+    // Estado del textarea y funciones para actualizarlo
     const [ isEditing, setIsEditing ] = useState<boolean>( false );
-    const [ description, setDescription ] = useState<string>( descriptionS );
+    const [ newDescription, setNewDescription ] = useState<string>( description || descriptionDefault );
 
+    // Mutación para actualizar la descripción
+    const { mutate, isLoading } = useMutation(
+        ( data: { name: string; description: string; } ) => updateBoard( data , board.id )
+    );
+
+    // Funciones para editar y cancelar la edición
     const handleEdit = () => setIsEditing( true );
     const handleCancelEdit = () => setIsEditing( false );
 
-    const handleChangeDescription = ( event: ChangeEvent<HTMLTextAreaElement> ) => setDescription( event.target.value );
+    // Funcion para guardar la descripción y actualizar el estado
     const handleSave = ( event: FormEvent<HTMLFormElement> ) => {
         event.preventDefault();
+
+        if ( newDescription.length < 10 ) {
+            return;
+        }
+
+        mutate(
+            {
+                name: board.name,
+                description: newDescription
+            },
+            {
+                onSuccess: data => {
+                    // Se actualiza el estado del tablero e invalida el cache del tablero
+                    queryClient.setQueryData(['boards', board.id ], data );
+                    setIsEditing( false );
+                    queryClient.invalidateQueries(['boards', board.id ]);
+                }
+            }
+        )
     };
 
     return (
@@ -50,8 +89,8 @@ const Description = () => {
                     border: isEditing ? "1px solid #ccc" : "none",
                 }}
                 _focus={{ outline: "none" }}
-                value={ description }
-                onChange={ handleChangeDescription }
+                value={ newDescription }
+                onChange={ event => setNewDescription( event.target.value ) }
                 onFocus={ handleEdit }
             />
             {
@@ -60,12 +99,14 @@ const Description = () => {
                         colorScheme="green"
                         size="sm"
                         type="submit"
+                        isLoading={ isLoading }
                     >Guardar</Button>
                     <Button
                         variant="ghost"
                         size="sm"
                         ml="3"
                         onClick={ handleCancelEdit }
+                        disabled={ isLoading }
                     >Cancelar</Button>
                 </>)
             }

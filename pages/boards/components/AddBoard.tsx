@@ -38,12 +38,12 @@ const AddBoard = ({ isOpen, onClose }: IProps ) => {
     });
 
     // Función que se ejecuta al hacer click en el botón de crear
-    const handleSubmit: FormEventHandler<HTMLDivElement> = async ( event ) => {
+    const handleSubmit: FormEventHandler<HTMLDivElement> = ( event ) => {
         event.preventDefault();
 
         if ( name.length < 3 ) return;
 
-        await mutate({ name, cover });
+        mutate({ name, cover });
     }
 
     return (

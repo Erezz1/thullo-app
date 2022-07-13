@@ -5,6 +5,7 @@ import { Box } from '@chakra-ui/react';
 
 import Header from '../header';
 import Loading from '../loading';
+import { UserProvider } from 'contexts/provider';
 
 interface IProps {
     children: ReactNode;
@@ -20,7 +21,7 @@ const Layout = ({ children, title }: IProps ) => {
     }
 
     return (
-        <>
+        <UserProvider>
             <Head>
                 <title>{ title } | Thullo</title>
             </Head>
@@ -32,7 +33,7 @@ const Layout = ({ children, title }: IProps ) => {
                 <Header />
                 { children }
             </Box>
-        </>
+        </UserProvider>
     )
 }
 

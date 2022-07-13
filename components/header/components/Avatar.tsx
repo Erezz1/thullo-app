@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import { useRouter } from 'next/router';
 import { signOut } from 'next-auth/react';
 import { useQueryClient } from 'react-query';
@@ -12,17 +13,13 @@ import {
     Button
 } from '@chakra-ui/react';
 import { IoIosArrowDown, IoMdExit } from 'react-icons/io';
-import { useQuery } from 'react-query';
-import { getUserAuth } from 'utils';
+import { UserContext } from 'contexts/context';
+
 const Avatar = () => {
 
-    // Obtiene el usuario autenticado y hace refetch de los tableros
+    // Obtiene el query client y el usuario autenticado
     const queryClient = useQueryClient();
-    const { data: user } = useQuery(['user'], getUserAuth, {
-        refetchOnWindowFocus: false,
-        retry: false,
-        onSuccess: data => queryClient.invalidateQueries(['boards']),
-    });
+    const user = useContext( UserContext );
 
     // Obtiene el router
     const router = useRouter();
@@ -30,6 +27,7 @@ const Avatar = () => {
     // Redirige al usuario a la página de login y cierra la sesión
     const handleLogout = () => {
         signOut({ callbackUrl: '/login' });
+        queryClient.clear();
     }
 
     return (

@@ -28,14 +28,13 @@ const Created = ({ creator }: IProps ) => {
             my="3"
         >
             <Avatar
-                name={ creator.name }
-                src={ creator.image }
-                rounded="lg"
+                name={ creator?.name }
+                src={ creator?.image }
             />
             <Text
                 fontWeight="500"
                 ml="3"
-            >{ creator.name }</Text>
+            >{ creator?.name }</Text>
         </Box>
         </>
     )

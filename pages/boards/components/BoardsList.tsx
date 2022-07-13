@@ -1,29 +1,27 @@
-import { useEffect, useState } from 'react';
-import { Grid } from '@chakra-ui/react';
-import { useQuery, useQueryClient } from 'react-query';
+import { Grid, Text } from '@chakra-ui/react';
 
 import BoardItem from './BoardItem';
-import { IBoard, IUserLogged } from 'types';
-import { getAllBoards } from 'utils';
+import { UserContext } from 'contexts/context';
+import { useContext } from 'react';
 
 const BoardsList = () => {
 
-    // Crea un estado de los tableros y obtenemos el contexto de usuario
-    const [ boards, setBoards ] = useState<IBoard[]>([]);
-    const queryClient = useQueryClient();
-    const user = queryClient.getQueryData<IUserLogged>('user');
+    // Obtiene el estado del usuario
+    const user = useContext( UserContext );
 
-    // Obtiene todos los tableros del usuario
-    const { refetch } = useQuery(['boards'], () => getAllBoards( user?.boards || [] ), {
-        onSuccess: data => setBoards( data ),
-        retry: false,
-        refetchOnWindowFocus: false,
-    });
-
-    // Hace un refetch del tablero al cambiar el estado del usuario
-    useEffect(() => {
-        refetch();
-    }, [ user ]);
+    // Valida si el usuario tiene por lo menos un tablero
+    if ( !user?.boards ) {
+        return (
+            <Text
+                textAlign="center"
+                fontSize="xl"
+                fontWeight="bold"
+                color="gray.500"
+            >
+                ¡Crea un tablero!
+            </Text>
+        );
+    }
 
     return (
         <Grid
@@ -32,10 +30,10 @@ const BoardsList = () => {
             pb="5"
         >
             {
-                boards.map( board => (
+                user?.boards.map( boardId => (
                     <BoardItem
-                        key={ board.id }
-                        board={ board }
+                        key={ boardId }
+                        boardId={ boardId }
                     />
                 ))
             }

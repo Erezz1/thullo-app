@@ -1,5 +1,6 @@
+import { FormEventHandler, useContext, useState } from 'react';
+import { useMutation, useQueryClient } from 'react-query';
 import {
-    Box,
     Button,
     HStack,
     Input,
@@ -13,26 +14,77 @@ import {
 } from '@chakra-ui/react';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { IoMdAdd } from 'react-icons/io';
+import { FcSearch } from 'react-icons/fc';
 
 import MemberFound from './MemberFound';
+import { addMemberToBoard, getUsersByQueries } from 'utils';
+import { IUser } from 'types';
+import { BoardContext } from 'contexts/context';
 
 const AddMemberMenu = () => {
 
-    const members = ['1','2','3'];
+    // Obtiene el estado del tablero y el query client
+    const board = useContext( BoardContext );
+    const queryClient = useQueryClient();
 
+    // Estado de los usuarios encontrados y del input de busqueda
+    const [ userFound, setUserFound ] = useState<IUser[]>([]);
+    const [ userSearch, setUserSearch ] = useState<string>('');
+
+    // Estado del id del usuario que se agrega al tablero
+    const [ userAdded, setUserAdded ] = useState<string>('');
+
+    // Mutacion para encontrar usuarios
+    const { mutate: mutateSearchUsers, isLoading: isLoadingUsers } = useMutation(
+        ( name: string = '' ) => getUsersByQueries( name ),
+    );
+
+    // Mutacion para agregar un usuario al tablero
+    const { mutate: mutateAddMember, isLoading: isLoadingAddMember } = useMutation(
+        ( userId: string ) => addMemberToBoard( board.id, userId )
+    );
+
+    // Estado del radio group
     const { getRootProps, getRadioProps } = useRadioGroup({
         name: 'framework',
-        defaultValue: 'react',
-        onChange: console.log,
+        defaultValue: '',
+        onChange: setUserAdded,
     })
-
     const group = getRootProps()
+
+    // Evento submit para buscar usuarios
+    const handleSearchUsers: FormEventHandler<HTMLDivElement> | undefined = ( event ) => {
+        event.preventDefault();
+        mutateSearchUsers(
+            userSearch,
+            { onSuccess: data => { setUserFound( data ) } }
+        );
+    }
+
+    // Funcion para agregar un usuario al tablero
+    const handleAddMember = () => {
+        if ( !userAdded ) return;
+
+        mutateAddMember(
+            userAdded,
+            {
+                onSuccess: data => {
+                    queryClient.setQueryData(['board', board.id ], data.members );
+                    queryClient.invalidateQueries(['members', board.id ]);
+                    queryClient.invalidateQueries(['board', board.id ]);
+                    setUserFound([]);
+                    setUserSearch('');
+                }
+            }
+        )
+    }
 
     return (
         <Menu>
             <MenuButton
                 as={ Button }
                 colorScheme="blue"
+                size="sm"
             >
                 <IoMdAdd />
             </MenuButton>
@@ -43,14 +95,24 @@ const AddMemberMenu = () => {
                 <InputGroup
                     size="md"
                     as="form"
+                    onSubmit={ handleSearchUsers }
                 >
                     <Input
                         pr="4.5rem"
                         placeholder="Usuarios..."
                         shadow="md"
+                        value={ userSearch }
+                        onChange={ e => setUserSearch( e.target.value ) }
                     />
                     <InputRightElement width="4.5rem">
-                        <Button h="1.75rem" size="sm" colorScheme="blue" type="submit">
+                        <Button
+                            h="1.75rem"
+                            size="sm"
+                            colorScheme="blue"
+                            type="submit"
+                            isLoading={ isLoadingUsers }
+                            disabled={ isLoadingAddMember }
+                        >
                             <AiOutlineSearch />
                         </Button>
                     </InputRightElement>
@@ -67,20 +129,35 @@ const AddMemberMenu = () => {
                     gap="3"
                 >
                     {
-                        members.map( value => {
-                            const radio = getRadioProps({ value })
-
-                            return (
-                                <MemberFound key={ value } { ...radio } />
-                            )
-                        })
+                        userFound.length >= 1
+                            ? userFound?.map( userFound => (
+                                <MemberFound
+                                    key={ userFound.id }
+                                    radio={ getRadioProps({ value: userFound.id }) }
+                                    userFound={ userFound }
+                                />
+                            ))
+                            : <Text
+                                d="flex"
+                                alignItems="center"
+                                justifyContent="center"
+                                fontSize="sm"
+                                fontWeight="500"
+                                color="gray.500"
+                            >
+                                Encuentra usuarios. <FcSearch size={15} />
+                            </Text>
                     }
                 </HStack>
 
                 <Button
                     colorScheme="blue"
-                    mt="5" mx="auto"
+                    mt="5"
+                    mx="auto"
                     display="block"
+                    disabled={ isLoadingUsers }
+                    isLoading={ isLoadingAddMember }
+                    onClick={ handleAddMember }
                 >
                     Agregar
                 </Button>
@@ -89,4 +166,4 @@ const AddMemberMenu = () => {
     )
 }
 
-export default AddMemberMenu
+export default AddMemberMenu;

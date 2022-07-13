@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Box, Text } from '@chakra-ui/react';
 
 import MemberItem from './MemberItem';
@@ -18,13 +18,12 @@ const MembersList = ({ members: membersId, boardId }: IProps ) => {
     const [ restOfMembers, setRestOfMembers ] = useState<IUser[]>([]);
 
     // Obtiene los miembros de un tablero
-    useQuery(['membersBoard', boardId ], () => getAllUsers( membersId ), {
+    useQuery(['members', boardId ], () => getAllUsers( membersId ), {
         onSuccess: data => {
             setMembers( data.slice(0, 3) );
             setRestOfMembers( data.slice(3) );
         },
         retry: false,
-        refetchOnWindowFocus: false,
     });
 
     return (

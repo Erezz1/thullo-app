@@ -23,8 +23,12 @@ axiosInstance.interceptors.request.use(
 
         // Valida que haya headers y, en caso de que si, agrega el token
         if ( config.headers ) {
-            const token = JSON.parse( localStorage.getItem('token') || '' );
-            config.headers.Authorization = `Bearer ${ token }`;
+            try {
+                const token = JSON.parse( localStorage.getItem('token') || '' );
+                config.headers.Authorization = `Bearer ${ token }`;
+            } catch ( error ) {
+                console.log( error );
+            }
         }
 
         return config;
@@ -49,7 +53,7 @@ axiosInstance.interceptors.response.use(
     },
     ( error ) => {
         // Muestra una alerta en caso de que haya un error en la respuesta
-        if ( error.response.status < 200 || error.response.status >= 300 ) {
+        if ( error.response?.status < 200 || error.response?.status >= 300 ) {
             toast({
                 title: `Error #${ error.response.status }`,
                 status: 'warning',
