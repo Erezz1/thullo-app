@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Put } from '@nestjs/common';
 
 import { ListService } from './list.service';
 import { ChangeCardsPositionDto, CreateListDto, DeleteListDto, UpdateListDto } from './dto';
@@ -69,7 +69,7 @@ export class ListController {
     }
 
 
-    @Delete('/:listId')
+    @Patch('/:listId')
     async deleteList(
         @Param('listId') listId: string,
         @Body() list: DeleteListDto

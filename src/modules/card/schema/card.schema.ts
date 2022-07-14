@@ -8,11 +8,21 @@ export class Card {
     @Prop({ required: true })
     title: string;
 
-    @Prop({ required: true })
+    @Prop({ default: '' })
     description: string;
 
-    @Prop({ required: true })
+    @Prop({ default: '' })
     cover: string;
 }
 
-export const CardSchema = SchemaFactory.createForClass( Card );
+const CardSchema = SchemaFactory.createForClass( Card );
+
+CardSchema.methods.toJSON = function () {
+    const { __v, _id, ...card } = this.toObject();
+    return {
+        id: _id,
+        ...card,
+    };
+}
+
+export { CardSchema };

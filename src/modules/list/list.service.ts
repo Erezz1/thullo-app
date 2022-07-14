@@ -14,7 +14,7 @@ export class ListService {
     ) {}
 
     async getListById( listId: string ): Promise<any> {
-        const listFound = await this.listModel.findById( listId );
+        const listFound = await this.listModel.findById( listId ).populate('cards');
         return listFound;
     }
 
@@ -61,7 +61,7 @@ export class ListService {
             $set: {
                 cards,
             },
-        }, { new: true });
+        }, { new: true }).populate('cards');
 
         return listFound;
     }
