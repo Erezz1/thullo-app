@@ -91,6 +91,7 @@ const Description = ({ description }: IProps ) => {
                 }}
                 _focus={{ outline: "none" }}
                 _disabled={{ color: 'black' }}
+                cursor="text"
                 disabled={ !board.admins?.includes( user?.id || '' ) }
                 value={ newDescription }
                 onChange={ event => setNewDescription( event.target.value ) }

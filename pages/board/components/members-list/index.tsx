@@ -5,12 +5,13 @@ import { useQuery } from 'react-query';
 import AddMemberMenu from './components/AddMemberMenu';
 import MemberItem from './components/MemberItem';
 import { getAllUsers } from 'utils';
-import { BoardContext } from 'contexts/context';
+import { BoardContext, UserContext } from 'contexts/context';
 
 const MembersLists = () => {
 
     // Obtiene el estado del tablero
     const board = useContext( BoardContext );
+    const user = useContext( UserContext );
 
     // Obtiene los miembros de un tablero
     const { data: members } = useQuery(
@@ -35,7 +36,11 @@ const MembersLists = () => {
                 ))
             }
 
-            <AddMemberMenu />
+            {
+                user && board.admins.includes( user?.id ) && (
+                    <AddMemberMenu />
+                )
+            }
         </Box>
     )
 }

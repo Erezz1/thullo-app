@@ -1,7 +1,14 @@
-import { Box, Image, Text } from '@chakra-ui/react';
+import { useContext } from 'react';
+import { useRouter } from 'next/router';
+import {
+    Box,
+    Image,
+    Text
+} from '@chakra-ui/react';
 import { Draggable } from 'react-beautiful-dnd-next';
 
 import { ICard } from 'types';
+import { BoardContext } from 'contexts/context';
 
 interface IProps {
     card: ICard;
@@ -10,7 +17,17 @@ interface IProps {
 
 const Card = ({ card, index }: IProps ) => {
 
+    // Obtiene el contexto del tablero y los datos de la tarjeta
     const { cover, id, title } = card;
+    const board = useContext( BoardContext );
+
+    // Instancia del router
+    const router = useRouter();
+
+    // Funcion para abrir el modal al hacer click en la tarjeta
+    const handleOpenCard = () => {
+        router.push(`/board/${ board.id }?cardId=${ id }`);
+    }
 
     return (
         <Draggable
@@ -32,7 +49,7 @@ const Card = ({ card, index }: IProps ) => {
                     mb="5"
                     bgColor={ snapshot.isDragging ? 'blue.50' : '#FFF' }
                     style={{ ...provided.draggableProps.style }}
-                    onClick={() => console.log( card )}
+                    onClick={ handleOpenCard }
                 >
                     {
                         cover && (
