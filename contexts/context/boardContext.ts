@@ -9,6 +9,7 @@ const BoardContext = createContext<IBoard>({
     members: [],
     id: '',
     description: '',
+    admins: [],
 });
 
 export default BoardContext;

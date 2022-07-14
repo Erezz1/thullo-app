@@ -1,7 +1,7 @@
 import { Box, Image, Text } from '@chakra-ui/react';
 import { Draggable } from 'react-beautiful-dnd-next';
 
-import { ICard } from '../../../interfaces';
+import { ICard } from 'types';
 
 interface IProps {
     card: ICard;

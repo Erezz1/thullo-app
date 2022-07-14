@@ -1,3 +1,5 @@
+import { useContext, useState } from 'react';
+import { useMutation, useQueryClient } from 'react-query';
 import {
     Button,
     ButtonGroup,
@@ -10,33 +12,59 @@ import {
     MenuButton,
     MenuItem,
     MenuList,
+    Spinner,
     useEditableControls,
 } from '@chakra-ui/react';
 import { FiMoreHorizontal } from 'react-icons/fi';
 import { GiCheckMark, GiCancel } from 'react-icons/gi';
 
-import { IList } from '../../../interfaces';
+import { IList } from 'types';
+import { deleteList, updateList } from 'utils';
+import { BoardContext } from 'contexts/context';
 
 interface IProps {
     list: IList;
 }
 
-const Controls = () => {
+const Controls = ({ listId }: { listId: string }) => {
+
+    const board = useContext( BoardContext );
 
     const {
         isEditing,
         getSubmitButtonProps,
         getCancelButtonProps,
         getEditButtonProps,
-    } = useEditableControls()
+    } = useEditableControls();
+
+    const queryClient = useQueryClient();
+    const { isLoading, mutate } = useMutation(
+        ( listId: string ) => deleteList({ listId, boardId: board.id }),
+    );
+
+    const handleDeleteList = () => {
+        mutate(
+            listId,
+            {
+                onSuccess: () => {
+                    queryClient.invalidateQueries(['board', board.id ]);
+                }
+            }
+        );
+    }
+
+    if ( isLoading ) {
+        return <Spinner />
+    }
 
     return isEditing
         ? (
-            <ButtonGroup justifyContent='center' size='sm'>
+            <ButtonGroup justifyContent="center" size="sm">
                 <Button
                     as={ IconButton }
                     icon={<GiCheckMark />}
                     variant="ghost"
+                    type="submit"
                     { ...getSubmitButtonProps() }
                 />
                 <Button
@@ -58,7 +86,7 @@ const Controls = () => {
 
                 <MenuList>
                     <MenuItem { ...getEditButtonProps() }>Renombrar</MenuItem>
-                    <MenuItem>Eliminar esta lista</MenuItem>
+                    <MenuItem onClick={ handleDeleteList }>Eliminar esta lista</MenuItem>
                 </MenuList>
             </Menu>
         )
@@ -66,11 +94,32 @@ const Controls = () => {
 
 const ListSettings = ({ list }: IProps ) => {
 
-    const { name, id } = list;
+    const [ newName, setNewName ] = useState<string>( list.name );
+
+    const queryClient = useQueryClient();
+    const { isLoading, mutate } = useMutation(
+        ( newName: string ) => updateList({
+            listId: list.id,
+            name: newName
+        })
+    )
+
+    const handleSubmit = () => {
+        mutate(
+            newName,
+            {
+                onSuccess: data => {
+                    queryClient.invalidateQueries(['list', list.id ]);
+                }
+            }
+        );
+    }
 
     return (
         <Editable
-            defaultValue={ name }
+            defaultValue={ newName }
+            value={ newName }
+            onChange={ setNewName }
             fontSize="lg"
             fontWeight="500"
             isPreviewFocusable={ false }
@@ -78,10 +127,12 @@ const ListSettings = ({ list }: IProps ) => {
             justifyContent="space-between"
             alignItems="center"
             mb="5"
+            as="form"
+            onSubmit={ handleSubmit }
         >
             <EditablePreview isTruncated />
             <Input as={ EditableInput } />
-            <Controls />
+            { !isLoading && <Controls listId={ list.id } /> }
         </Editable>
     )
 }

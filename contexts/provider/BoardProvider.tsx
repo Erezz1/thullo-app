@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 
 import { BoardContext } from '../context';
 import { getBoardById } from 'utils';
@@ -30,6 +31,10 @@ const BoardProvider = ({ children, boardId }: IProps ) => {
 
     return (
         <BoardContext.Provider value={ board }>
+            <Head>
+                <title>{ board.name } | Thullo</title>
+            </Head>
+
             { children }
         </BoardContext.Provider>
     )

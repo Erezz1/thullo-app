@@ -4,7 +4,7 @@ import { Button, Icon, Text, Textarea } from '@chakra-ui/react';
 import { MdDescription } from 'react-icons/md';
 
 import { updateBoard } from 'utils';
-import { BoardContext } from 'contexts/context';
+import { BoardContext, UserContext } from 'contexts/context';
 
 interface IProps {
     description: string;
@@ -28,6 +28,7 @@ const Description = ({ description }: IProps ) => {
     // Se obtiene el estado del tablero y el query client
     const queryClient = useQueryClient();
     const board = useContext( BoardContext );
+    const user = useContext( UserContext );
 
     // Estado del textarea y funciones para actualizarlo
     const [ isEditing, setIsEditing ] = useState<boolean>( false );
@@ -89,6 +90,8 @@ const Description = ({ description }: IProps ) => {
                     border: isEditing ? "1px solid #ccc" : "none",
                 }}
                 _focus={{ outline: "none" }}
+                _disabled={{ color: 'black' }}
+                disabled={ !board.admins?.includes( user?.id || '' ) }
                 value={ newDescription }
                 onChange={ event => setNewDescription( event.target.value ) }
                 onFocus={ handleEdit }

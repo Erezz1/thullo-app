@@ -6,7 +6,11 @@ import {
 } from '@chakra-ui/react';
 import { IoIosAdd } from 'react-icons/io';
 
-const AddCard = () => {
+interface IProps {
+    listId: string;
+}
+
+const AddCard = ({ listId }: IProps ) => {
 
     const [ isAddingCard, setIsAddingCard ] = useState<boolean>( false );
 

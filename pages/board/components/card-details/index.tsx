@@ -9,9 +9,9 @@ import {
     useDisclosure,
 } from '@chakra-ui/react';
 import { AiOutlineClose } from 'react-icons/ai';
+import { ICard } from 'types';
 
 import Actions from './components/Actions';
-import { ICard } from '../../interfaces';
 import Description from './components/Description';
 
 const card: ICard = {

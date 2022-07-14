@@ -5,7 +5,7 @@ import { Box } from '@chakra-ui/react';
 import Layout from '@/components/layout';
 import BoardContainer from './components/board-container';
 import { useAuth, useValidateWindowSize } from 'hooks';
-import { BoardProvider } from 'contexts/provider';
+import { BoardProvider, ListsProvider } from 'contexts/provider';
 
 const MembersList = dynamic( () => import(/* webpackChunkName: "members-list" */ './components/members-list') );
 const BoardDetails = dynamic( () => import(/* webpackChunkName: "board-details" */ './components/board-details') );
@@ -19,25 +19,28 @@ const Board: NextPage<IProps> = ({ boardId }) => {
     // Valida si el usuario esta autenticado
     useAuth();
 
+    // Valida si el usuario esta en una pantalla grande
     useValidateWindowSize({
         message: 'Para una mejor experiencia, utiliza una laptop o una computadora de escritorio.',
     })
 
     return (
-        <Layout title="Hola">
+        <Layout title="Cargando...">
             <BoardProvider boardId={ boardId }>
-                <Box
-                    p="5"
-                    pb="0"
-                    display={["none", "flex"]}
-                    justifyContent="space-between"
-                    alignItems="center"
-                >
-                    <MembersList />
-                    <BoardDetails />
-                </Box>
+                <ListsProvider>
+                    <Box
+                        p="5"
+                        pb="0"
+                        display={["none", "flex"]}
+                        justifyContent="space-between"
+                        alignItems="center"
+                    >
+                        <MembersList />
+                        <BoardDetails />
+                    </Box>
 
-                <BoardContainer />
+                    <BoardContainer />
+                </ListsProvider>
             </BoardProvider>
         </Layout>
     )

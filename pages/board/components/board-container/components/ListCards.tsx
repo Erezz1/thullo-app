@@ -4,7 +4,7 @@ import { Droppable } from 'react-beautiful-dnd-next';
 import Card from './Card';
 import ListSettings from './ListSettings';
 import AddCard from './AddCard';
-import { IList } from '../../../interfaces';
+import { IList } from 'types';
 
 interface IProps {
     list: IList;
@@ -46,7 +46,7 @@ const ListCards = ({ list }: IProps ) => {
                         }
                         { provided.placeholder }
 
-                        <AddCard />
+                        <AddCard listId={ id } />
                     </Box>
                 )
             }
