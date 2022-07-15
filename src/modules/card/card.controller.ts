@@ -69,7 +69,7 @@ export class CardController {
         return cardResponse;
     }
 
-    @Delete('/:cardId')
+    @Put('/delete/:cardId')
     async deleteCard(
         @Param('cardId') cardId: string,
         @Body() card: DeleteCardDto
