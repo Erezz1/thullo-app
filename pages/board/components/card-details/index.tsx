@@ -17,7 +17,7 @@ const CardDetails = () => {
 
     // Valida si el query contiene una cardId y si lo hay, muestra el modal
     useEffect(() => {
-        if ( Object.keys( query ).includes('cardId') ) { onOpen(); }
+        if ( Object.keys( query ).includes('cardId') && Object.keys( query ).includes('listId')  ) { onOpen(); }
     }, [ query ]);
 
     // Hook para el manejo del modal

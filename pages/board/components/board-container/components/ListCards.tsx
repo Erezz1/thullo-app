@@ -40,6 +40,7 @@ const ListCards = ({ list }: IProps ) => {
                                 <Card
                                     card={ card }
                                     index={ index }
+                                    listId={ id }
                                     key={ card.id }
                                 />
                             ))

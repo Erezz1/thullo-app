@@ -18,3 +18,20 @@ export const getCardById = async ( cardId: string ): Promise<ICard> => {
     const { data } = await axiosInstance.get<ICard>(`/card/${ cardId }` );
     return data;
 }
+
+// Actualizar una tarjeta
+interface ICardUpdate {
+    title: string;
+    description: string;
+    cover: string;
+    id: string;
+}
+export const updateCard = async ( { id: cardId, ...card }: ICardUpdate ): Promise<ICard> => {
+    const { data } = await axiosInstance.put<ICard>(`/card/${ cardId }`, card );
+    return data;
+}
+
+// Eliminar una tarjeta
+export const deleteCard = async ( cardId: string, listId: string ): Promise<void> => {
+    await axiosInstance.put(`/card/delete/${ cardId }`, { listId });
+}

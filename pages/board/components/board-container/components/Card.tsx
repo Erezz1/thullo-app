@@ -12,10 +12,11 @@ import { BoardContext } from 'contexts/context';
 
 interface IProps {
     card: ICard;
+    listId: string;
     index: number;
 }
 
-const Card = ({ card, index }: IProps ) => {
+const Card = ({ card, index, listId }: IProps ) => {
 
     // Obtiene el contexto del tablero y los datos de la tarjeta
     const { cover, id, title } = card;
@@ -26,7 +27,7 @@ const Card = ({ card, index }: IProps ) => {
 
     // Funcion para abrir el modal al hacer click en la tarjeta
     const handleOpenCard = () => {
-        router.push(`/board/${ board.id }?cardId=${ id }`);
+        router.push(`/board/${ board.id }?cardId=${ id }&listId=${ listId }`);
     }
 
     return (

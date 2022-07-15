@@ -1,4 +1,6 @@
-import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useState } from 'react';
+import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useMutation, useQueryClient } from 'react-query';
 import {
     Box,
     Button,
@@ -8,18 +10,56 @@ import {
 } from '@chakra-ui/react';
 import { MdDescription } from 'react-icons/md';
 
+import { updateCard } from 'utils';
+
 interface IProps {
+    cardId: string;
     title: string;
     description: string;
+    cover: string;
     setDescription: Dispatch<SetStateAction<string>>;
 }
 
-const Description = ({ title, description, setDescription }: IProps ) => {
+const Description = ({ cardId, title, description, cover, setDescription }: IProps ) => {
 
+    // Instancia del router
+    const { query } = useRouter();
+
+    // Instancia del query client
+    const queryClient = useQueryClient();
+
+    // Estado para editar o no la descripcion
     const [ isEditing, setIsEditing ] = useState<boolean>( false );
 
+    // Mutacion para actualizar una tarjeta
+    const { mutate, isLoading } = useMutation(
+        ['card', cardId ],
+        ({ cover, description }: { cover: string; description: string }) => updateCard({ id: cardId, title, cover, description }),
+    )
+
+    // Funcion para editar la descripcion
     const handleSave = ( event: FormEvent<HTMLFormElement> ) => {
         event.preventDefault();
+
+        if ( !cover || description.length < 10 ) {
+            return;
+        }
+
+        mutate(
+            {
+                cover,
+                description
+            },
+            {
+                // Si se actualiza correctamente, actualiza el estado de la tarjeta y valida los cambios en la lista
+                onSuccess: data => {
+                    queryClient.setQueryData(['card', cardId ], data );
+                    queryClient.invalidateQueries(['card', cardId ]);
+                    queryClient.invalidateQueries(['list', query.listId ]);
+                    setIsEditing( false );
+                }
+            }
+        );
     };
 
     return (
@@ -60,12 +100,14 @@ const Description = ({ title, description, setDescription }: IProps ) => {
                             colorScheme="green"
                             size="sm"
                             type="submit"
+                            isLoading={ isLoading }
                         >Guardar</Button>
                         <Button
                             variant="ghost"
                             size="sm"
                             ml="3"
                             onClick={ () => setIsEditing( false ) }
+                            disabled={ isLoading }
                         >Cancelar</Button>
                     </>)
                 }

@@ -21,7 +21,14 @@ interface IProps {
 }
 
 const coverDefault = 'https://images.unsplash.com/photo-1512314889357-e157c22f938d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80';
-const desciptionDefault = `Da una breve descripción de la tarea.
+const desciptionDefault = `Da una breve descripción a la tarjeta. 🖋🗒
+
+Podrías dar una expliación de la tarea, o de la idea que quieres lograr. 📘
+
+Por ejemplo:
+    - Ir a la tienda a comprar comida. 🍽
+    - Desarrollar una aplicación web. 💻
+    - Hacer una tarea de clase. ✍
 `;;
 
 const ModalContainer = ({ cardId, onClose }: IProps ) => {
@@ -39,7 +46,8 @@ const ModalContainer = ({ cardId, onClose }: IProps ) => {
             onSuccess: card => {
                 setCover( card.cover || coverDefault );
                 setDescription( card.description || desciptionDefault );
-            }
+            },
+            refetchOnWindowFocus: false,
         }
     )
 
@@ -98,10 +106,13 @@ const ModalContainer = ({ cardId, onClose }: IProps ) => {
                     title={ card.title }
                     description={ description }
                     setDescription={ setDescription }
+                    cover={ cover }
+                    cardId={ cardId }
                 />
                 <Actions
                     setCover={ setCover }
                     cardId={ cardId }
+                    onClose={ onClose }
                 />
             </ModalBody>
         </ModalContent>

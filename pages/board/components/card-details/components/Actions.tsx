@@ -1,4 +1,6 @@
 import { Dispatch, SetStateAction } from 'react';
+import { useRouter } from 'next/router';
+import { useMutation, useQueryClient } from 'react-query';
 import {
     Box,
     Button,
@@ -16,10 +18,12 @@ import { IoMdSettings } from 'react-icons/io';
 import { AiFillDelete } from 'react-icons/ai';
 
 import { covers } from 'helpers';
+import { deleteCard } from 'utils';
 
 interface IProps {
     cardId: string;
     setCover: Dispatch<SetStateAction<string>>;
+    onClose: () => void;
 }
 
 const CoverOption = ( props: any ) => {
@@ -53,18 +57,40 @@ const CoverOption = ( props: any ) => {
     )
 }
 
-const Actions = ({ setCover, cardId }: IProps ) => {
+const Actions = ({ setCover, cardId, onClose }: IProps ) => {
 
+    // Instancia del router
+    const { query } = useRouter();
+
+    // Instancia del query client
+    const queryClient = useQueryClient()
+
+    // Mutacion para eliminar una tarjeta
+    const { isLoading, mutate } = useMutation(
+        ['card', cardId ],
+        ( cardId: string ) => deleteCard( cardId, query.listId as string )
+    )
+
+    // Hook para manejar el radio group
     const { getRootProps, getRadioProps } = useRadioGroup({
         name: 'cover',
         defaultValue: '',
         onChange: value => setCover( value ),
     })
+    const group = getRootProps();
 
-    const group = getRootProps()
-
+    // Funcion para eliminar una tarjeta
     const handleDelete = () => {
-        console.log('delete', cardId )
+        mutate(
+            cardId,
+            {
+                // Si se elimina correctamente, invalida la data de la lista y la actualiza
+                onSuccess: () => {
+                    queryClient.invalidateQueries(['list', query.listId ]);
+                    onClose();
+                }
+            }
+        );
     }
 
     return (
@@ -98,6 +124,7 @@ const Actions = ({ setCover, cardId }: IProps ) => {
                 colorScheme="red"
                 leftIcon={ <AiFillDelete /> }
                 onClick={ handleDelete }
+                isLoading={ isLoading }
             >
                 Eliminar
             </Button>

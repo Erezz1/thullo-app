@@ -14,6 +14,7 @@ import {
 import logo from '@/public/images/Logo.svg';
 import axiosInstance from 'client/axiosInstance';
 import useFormErrors from '../hooks/useFormErrors';
+import { randomAvatar } from 'helpers';
 
 interface IProps {
     onLogin: () => void;
@@ -68,7 +69,7 @@ const RegisterForm = ({ onLogin }: IProps ) => {
                 name: data.name,
                 email: data.email,
                 password: data.password,
-                imageAvatar: 'https://i.pravatar.cc/100'
+                imageAvatar: randomAvatar(),
             })
             .then(() => {
                 signIn('credentials', {
