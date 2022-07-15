@@ -28,7 +28,7 @@ const Login: NextPage = () => {
                 isClosable: true,
             })
         }
-    }, [ query ])
+    }, [ query, toast ])
 
     // Valida si el usuario esta logueado, en caso de ser asi, lo redirige a la pagina de 'boards'
     const { status } = useSession();

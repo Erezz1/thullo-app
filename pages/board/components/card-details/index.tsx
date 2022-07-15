@@ -15,13 +15,13 @@ const CardDetails = () => {
     // Instancia del router
     const { query, push } = useRouter();
 
+    // Hook para el manejo del modal
+    const { isOpen, onOpen, onClose } = useDisclosure();
+
     // Valida si el query contiene una cardId y si lo hay, muestra el modal
     useEffect(() => {
         if ( Object.keys( query ).includes('cardId') && Object.keys( query ).includes('listId')  ) { onOpen(); }
-    }, [ query ]);
-
-    // Hook para el manejo del modal
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    }, [ query, onOpen ]);
 
     // Funcion para cerrar el modal
     const handleClose = () => {
