@@ -14,7 +14,7 @@ const auth = ( req: NextApiRequest, res: NextApiResponse ) => NextAuth( req, res
                 password: { label: 'Password', type: 'password', placeholder: 'Password' },
             },
 
-            authorize: async ( credentials, req ): Promise<any> => {
+            async authorize( credentials, req ) {
 
                 try {
                     const res = await axiosInstance.post('/auth/login', {
