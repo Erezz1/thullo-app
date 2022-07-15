@@ -5,7 +5,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import axiosInstance from 'client/axiosInstance';
 
 
-export default ( req: NextApiRequest, res: NextApiResponse ) => NextAuth( req, res, {
+const auth = ( req: NextApiRequest, res: NextApiResponse ) => NextAuth( req, res, {
     providers: [
         CredentialsProvider({
             name: 'Credentials',
@@ -59,4 +59,6 @@ export default ( req: NextApiRequest, res: NextApiResponse ) => NextAuth( req, r
     pages: {
         error: '/login'
     }
-})
+});
+
+export default auth;

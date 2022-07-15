@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { FieldErrors, FieldValues } from 'react-hook-form';
 import { useToast } from '@chakra-ui/react';
 
-export const useFormErrors = ( errors: FieldErrors<FieldValues> ): void => {
+const useFormErrors = ( errors: FieldErrors<FieldValues> ): void => {
 
     // Crea una instancia de Toast
     const toast = useToast();
@@ -20,3 +20,5 @@ export const useFormErrors = ( errors: FieldErrors<FieldValues> ): void => {
         }))
     }, [ errors, toast ]);
 }
+
+export default useFormErrors;

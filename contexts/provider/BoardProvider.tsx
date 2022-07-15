@@ -25,7 +25,7 @@ const BoardProvider = ({ children, boardId }: IProps ) => {
         }
     );
 
-    if ( !board ) {
+    if ( !board || !board.lists ) {
         return null;
     }
 

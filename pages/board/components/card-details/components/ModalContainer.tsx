@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useQuery } from 'react-query';
 import {
     IconButton,
@@ -20,8 +21,13 @@ interface IProps {
 }
 
 const coverDefault = 'https://images.unsplash.com/photo-1512314889357-e157c22f938d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80';
+const desciptionDefault = `Da una breve descripción de la tarea.
+`;;
 
 const ModalContainer = ({ cardId, onClose }: IProps ) => {
+
+    const [ cover, setCover ] = useState<string>('');
+    const [ description, setDescription ] = useState<string>('');
 
     // Obtencion de la tarjeta
     const { data: card, isLoading } = useQuery(
@@ -30,11 +36,21 @@ const ModalContainer = ({ cardId, onClose }: IProps ) => {
         {
             // Si hay un error, se cierra el modal
             onError: () => onClose(),
+            onSuccess: card => {
+                setCover( card.cover || coverDefault );
+                setDescription( card.description || desciptionDefault );
+            }
         }
     )
 
     if ( isLoading ) {
-        return <Spinner />
+        return <ModalContent
+            d="flex"
+            alignItems="center"
+            p="5"
+        >
+            <Spinner />
+        </ModalContent>
     }
 
     if ( !card ) {
@@ -54,7 +70,7 @@ const ModalContainer = ({ cardId, onClose }: IProps ) => {
         <ModalContent>
             <ModalHeader>
                 <Image
-                    src={ card.cover ? card.cover : coverDefault }
+                    src={ cover }
                     alt={ card.title }
                     w="100%"
                     h="32"
@@ -80,9 +96,13 @@ const ModalContainer = ({ cardId, onClose }: IProps ) => {
             >
                 <Description
                     title={ card.title }
-                    description={ card.description }
+                    description={ description }
+                    setDescription={ setDescription }
                 />
-                <Actions />
+                <Actions
+                    setCover={ setCover }
+                    cardId={ cardId }
+                />
             </ModalBody>
         </ModalContent>
     )

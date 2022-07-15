@@ -4,6 +4,7 @@ import {
     ModalOverlay,
     useDisclosure,
     Text,
+    ModalContent,
 } from '@chakra-ui/react';
 
 import { memo, useEffect } from 'react';
@@ -38,14 +39,17 @@ const CardDetails = () => {
                         cardId={ query.cardId as string }
                         onClose={ handleClose }
                     />
-                    : <Text
-                        textAlign="center"
-                        fontSize="2xl"
-                        fontWeight="bold"
-                        color="gray.500"
-                    >
-                        Ocurrió un error al cargar la tarjeta
-                    </Text>
+                    : <ModalContent>
+                            <Text
+                            textAlign="center"
+                            fontSize="2xl"
+                            fontWeight="bold"
+                            color="gray.500"
+                            m="10"
+                        >
+                            Ocurrió un error al cargar la tarjeta
+                        </Text>
+                    </ModalContent>
             } 
         </Modal>
     )

@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import {
     Box,
     Button,
@@ -11,17 +11,13 @@ import { MdDescription } from 'react-icons/md';
 interface IProps {
     title: string;
     description: string;
+    setDescription: Dispatch<SetStateAction<string>>;
 }
 
-const Description = ({ title, description }: IProps ) => {
+const Description = ({ title, description, setDescription }: IProps ) => {
 
     const [ isEditing, setIsEditing ] = useState<boolean>( false );
-    const [ descriptionState, setDescriptionState ] = useState<string>( description );
 
-    const handleEdit = () => setIsEditing( true );
-    const handleCancelEdit = () => setIsEditing( false );
-
-    const handleChangeDescription = ( event: ChangeEvent<HTMLTextAreaElement> ) => setDescriptionState( event.target.value );
     const handleSave = ( event: FormEvent<HTMLFormElement> ) => {
         event.preventDefault();
     };
@@ -54,9 +50,9 @@ const Description = ({ title, description }: IProps ) => {
                         border: isEditing ? "1px solid #ccc" : "none",
                     }}
                     _focus={{ outline: "none" }}
-                    value={ descriptionState }
-                    onChange={ handleChangeDescription }
-                    onFocus={ handleEdit }
+                    value={ description }
+                    onChange={ event => setDescription( event.target.value ) }
+                    onFocus={ () => setIsEditing( true ) }
                 />
                 {
                     isEditing && (<>
@@ -69,7 +65,7 @@ const Description = ({ title, description }: IProps ) => {
                             variant="ghost"
                             size="sm"
                             ml="3"
-                            onClick={ handleCancelEdit }
+                            onClick={ () => setIsEditing( false ) }
                         >Cancelar</Button>
                     </>)
                 }

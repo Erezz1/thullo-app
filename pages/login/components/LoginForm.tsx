@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react';
 
 import logo from '@/public/images/Logo.svg';
-import { useFormErrors } from '../hooks';
+import useFormErrors from '../hooks/useFormErrors';
 
 interface IProps {
     onRegister: () => void;
