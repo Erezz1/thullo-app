@@ -47,6 +47,7 @@ const Login: NextPage = () => {
             <title>
                 { isLogging ? 'Inicia Sesión' : 'Registrate' } | Thullo
             </title>
+            <link rel="icon" href="/images/Logo-small.svg" />
         </Head>
 
         <Box

@@ -23,7 +23,10 @@ const Layout = ({ children, title }: IProps ) => {
     return (
         <UserProvider>
             <Head>
-                <title>{ title } | Thullo</title>
+                <title>
+                    { title } | Thullo
+                </title>
+                <link rel="icon" href="/images/Logo-small.svg" />
             </Head>
 
             <Box

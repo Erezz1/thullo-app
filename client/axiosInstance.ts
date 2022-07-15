@@ -58,9 +58,9 @@ axiosInstance.interceptors.response.use(
                 title: `Error #${ error.response.status }`,
                 status: 'warning',
                 description:
-                    error.response.data.message === 'Unauthorized'
+                    error.response.data?.message === 'Unauthorized'
                         ? 'No tienes permisos para realizar esta acción'
-                        : error.response.data.message || error.response.statusText,
+                        : error.response.data?.message || error.response.statusText,
                 duration: 5000,
                 isClosable: true,
             });
