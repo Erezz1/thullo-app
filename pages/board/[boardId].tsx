@@ -14,7 +14,7 @@ interface IProps {
     boardId: string;
 }
 
-const Board: NextPage<IProps> = ({ boardId }) => {
+const Board: NextPage<IProps> = ({ boardId }: IProps ) => {
 
     // Valida si el usuario esta autenticado
     useAuth();
