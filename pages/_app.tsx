@@ -29,7 +29,7 @@ const MyApp = ({
     }
 
     return (
-        <SessionProvider session={ session } basePath="/login" >
+        <SessionProvider session={ session }>
             <QueryClientProvider client={ queryClient }>
                 <ChakraProvider>
                     <Component { ...pageProps } />
