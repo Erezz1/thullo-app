@@ -138,7 +138,7 @@ const AddMemberMenu = () => {
                                 />
                             ))
                             : <Text
-                                d="flex"
+                                display="flex"
                                 alignItems="center"
                                 justifyContent="center"
                                 fontSize="sm"

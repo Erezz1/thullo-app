@@ -53,7 +53,7 @@ const ModalContainer = ({ cardId, onClose }: IProps ) => {
 
     if ( isLoading ) {
         return <ModalContent
-            d="flex"
+            display="flex"
             alignItems="center"
             p="5"
         >

@@ -7,7 +7,6 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 
 import Loading from '@/components/loading';
 import axiosInstance from '@/client/axiosInstance';
-import ErrorBoundary from '@/components/error/ErrorBoundary';
 import '../styles/global.css';
 
 const queryClient = new QueryClient();
@@ -33,9 +32,7 @@ const MyApp = ({
         <SessionProvider session={ session }>
             <QueryClientProvider client={ queryClient }>
                 <ChakraProvider>
-                    <ErrorBoundary>
-                        <Component { ...pageProps } />
-                    </ErrorBoundary>
+                    <Component { ...pageProps } />
                 </ChakraProvider>
 
                 <ReactQueryDevtools initialIsOpen={ false } />

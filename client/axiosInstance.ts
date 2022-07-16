@@ -1,8 +1,18 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { createStandaloneToast } from '@chakra-ui/toast';
+import Swal from 'sweetalert2';
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL;
-const toast = createStandaloneToast();
+const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: ( toast ) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer)
+        toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+})
 
 // Crea una instancia de axios
 const axiosInstance = axios.create({
@@ -35,12 +45,9 @@ axiosInstance.interceptors.request.use(
     },
     ( error ) => {
         // Si hay un error al hacer la peticion, lo marca en la consola y muestra un toast
-        toast({
-            title: `Error`,
-            status: 'error',
-            description: 'Ocurrió un error al recibir la respuesta',
-            duration: 5000,
-            isClosable: true,
+        Toast.fire({
+            icon: 'error',
+            title: 'Ocurrió un error al hacer la petición',
         });
         return console.error( error );
     }
@@ -54,15 +61,12 @@ axiosInstance.interceptors.response.use(
     ( error ) => {
         // Muestra una alerta en caso de que haya un error en la respuesta
         if ( error.response?.status < 200 || error.response?.status >= 300 ) {
-            toast({
-                title: `Error #${ error.response.status }`,
-                status: 'warning',
-                description:
-                    error.response.data?.message === 'Unauthorized'
+            Toast.fire({
+                title:
+                    error.response.data.message === 'Unauthorized'
                         ? 'No tienes permisos para realizar esta acción'
-                        : error.response.data?.message || error.response.statusText,
-                duration: 5000,
-                isClosable: true,
+                        : error.response.data.message || error.response.statusText,
+                icon: 'warning'
             });
         }
 
