@@ -4,7 +4,6 @@ import { Box } from '@chakra-ui/react';
 
 import Layout from '@/components/layout';
 import BoardContainer from './components/board-container';
-import { useAuth, useValidateWindowSize } from 'hooks';
 import { BoardProvider, ListsProvider } from 'contexts/provider';
 
 const MembersList = dynamic( () => import(/* webpackChunkName: "members-list" */ './components/members-list') );
@@ -15,14 +14,6 @@ interface IProps {
 }
 
 const Board: NextPage<IProps> = ({ boardId }: IProps ) => {
-
-    // Valida si el usuario esta autenticado
-    useAuth();
-
-    // Valida si el usuario esta en una pantalla grande
-    useValidateWindowSize({
-        message: 'Para una mejor experiencia, utiliza una laptop o una computadora de escritorio.',
-    })
 
     return (
         <Layout title="Cargando...">

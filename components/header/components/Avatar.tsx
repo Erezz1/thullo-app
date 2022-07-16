@@ -13,6 +13,8 @@ import {
     Button
 } from '@chakra-ui/react';
 import { IoIosArrowDown, IoMdExit } from 'react-icons/io';
+import { FiLogIn } from 'react-icons/fi';
+
 import { UserContext } from 'contexts/context';
 
 const Avatar = () => {
@@ -28,6 +30,21 @@ const Avatar = () => {
     const handleLogout = () => {
         signOut({ callbackUrl: '/login' });
         queryClient.clear();
+
+        // Limpia el token de la sesión
+        if ( typeof window !== 'undefined' ) {
+            window.localStorage.clear();
+        }
+    }
+
+    // Muestra un boton para iniciar sesión si no hay un usuario autenticado
+    if ( !user ) {
+        return <Button
+            rightIcon={ <FiLogIn /> }
+            onClick={ () => router.push('/login') }
+        >
+            Iniciar sesión
+        </Button>
     }
 
     return (
