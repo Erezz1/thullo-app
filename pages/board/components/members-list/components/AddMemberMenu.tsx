@@ -10,7 +10,8 @@ import {
     MenuButton,
     MenuList,
     Text,
-    useRadioGroup
+    useRadioGroup,
+    useToast
 } from '@chakra-ui/react';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { IoMdAdd } from 'react-icons/io';
@@ -26,6 +27,7 @@ const AddMemberMenu = () => {
     // Obtiene el estado del tablero y el query client
     const board = useContext( BoardContext );
     const queryClient = useQueryClient();
+    const toast = useToast();
 
     // Estado de los usuarios encontrados y del input de busqueda
     const [ userFound, setUserFound ] = useState<IUser[]>([]);
@@ -63,7 +65,15 @@ const AddMemberMenu = () => {
 
     // Funcion para agregar un usuario al tablero
     const handleAddMember = () => {
-        if ( !userAdded ) return;
+        if ( !userAdded ) {
+            toast({
+                title: 'Debes seleccionar un usuario',
+                status: 'warning',
+                duration: 5000,
+                isClosable: true,
+            })
+            return;
+        };
 
         mutateAddMember(
             userAdded,

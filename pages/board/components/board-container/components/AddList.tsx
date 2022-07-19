@@ -4,6 +4,7 @@ import {
     Box,
     Button,
     Input,
+    useToast,
 } from '@chakra-ui/react';
 import { IoIosAdd } from 'react-icons/io';
 import { BoardContext } from 'contexts/context';
@@ -13,6 +14,7 @@ const AddList = () => {
 
     // Obtiene el contexto del tablero
     const board = useContext( BoardContext );
+    const toast = useToast();
 
     // Estado del formulario
     const [ isAddingList, setIsAddingList ] = useState<boolean>( false );
@@ -31,7 +33,15 @@ const AddList = () => {
     const handleSubmitAddList: FormEventHandler<HTMLDivElement> & FormEventHandler<HTMLFormElement> = event => {
         event.preventDefault();
 
-        if ( listName.length < 5 ) { return }
+        if ( listName.length < 5 ) {
+            toast({
+                title: 'El nombre de la lista debe tener al menos 5 caracteres',
+                status: 'warning',
+                duration: 5000,
+                isClosable: true,
+            })
+            return;
+        }
 
         mutate(
             {

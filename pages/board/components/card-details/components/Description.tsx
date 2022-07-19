@@ -7,6 +7,7 @@ import {
     Icon,
     Text,
     Textarea,
+    useToast
 } from '@chakra-ui/react';
 import { MdDescription } from 'react-icons/md';
 
@@ -27,6 +28,7 @@ const Description = ({ cardId, title, description, cover, setDescription }: IPro
 
     // Instancia del query client
     const queryClient = useQueryClient();
+    const toast = useToast();
 
     // Estado para editar o no la descripcion
     const [ isEditing, setIsEditing ] = useState<boolean>( false );
@@ -42,6 +44,12 @@ const Description = ({ cardId, title, description, cover, setDescription }: IPro
         event.preventDefault();
 
         if ( !cover || description.length < 10 ) {
+            toast({
+                title: 'La tarjeta debe tener una imagen y una descripción de al menos 10 caracteres',
+                status: 'warning',
+                duration: 5000,
+                isClosable: true,
+            })
             return;
         }
 

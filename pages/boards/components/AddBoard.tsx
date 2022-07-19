@@ -10,6 +10,7 @@ import {
     ModalOverlay,
     Image,
     Input,
+    useToast,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { AiOutlineClose } from 'react-icons/ai';
@@ -29,8 +30,9 @@ const AddBoard = ({ isOpen, onClose }: IProps ) => {
     const [ name, setName ] = useState<string>('');
     const [ cover, setCover ] = useState<string>('');
 
-    // Obtiene el router
+    // Obtiene el router y el toast
     const router = useRouter();
+    const toast = useToast();
 
     // Mutation para crear un tablero
     const { isLoading, mutate } = useMutation( createBoard, {
@@ -41,7 +43,15 @@ const AddBoard = ({ isOpen, onClose }: IProps ) => {
     const handleSubmit: FormEventHandler<HTMLDivElement> = ( event ) => {
         event.preventDefault();
 
-        if ( name.length < 3 ) return;
+        if ( name.length < 3 ) {
+            toast({
+                title: 'El nombre del tablero debe tener al menos 3 caracteres',
+                status: 'warning',
+                duration: 5000,
+                isClosable: true,
+            })
+            return;
+        };
 
         mutate({ name, cover });
     }

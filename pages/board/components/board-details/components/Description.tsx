@@ -1,6 +1,12 @@
 import { FormEvent, useContext, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
-import { Button, Icon, Text, Textarea } from '@chakra-ui/react';
+import {
+    Button,
+    Icon,
+    Text,
+    Textarea,
+    useToast
+} from '@chakra-ui/react';
 import { MdDescription } from 'react-icons/md';
 
 import { updateBoard } from 'utils';
@@ -31,6 +37,7 @@ const Description = ({ description }: IProps ) => {
     const user = useContext( UserContext );
 
     // Estado del textarea y funciones para actualizarlo
+    const toast = useToast();
     const [ isEditing, setIsEditing ] = useState<boolean>( false );
     const [ newDescription, setNewDescription ] = useState<string>( description || descriptionDefault );
 
@@ -48,6 +55,12 @@ const Description = ({ description }: IProps ) => {
         event.preventDefault();
 
         if ( newDescription.length < 10 ) {
+            toast({
+                title: 'La descripción debe tener al menos 10 caracteres',
+                status: 'warning',
+                duration: 5000,
+                isClosable: true,
+            })
             return;
         }
 

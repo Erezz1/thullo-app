@@ -4,6 +4,7 @@ import {
     Box,
     Button,
     Input,
+    useToast
 } from '@chakra-ui/react';
 import { IoIosAdd } from 'react-icons/io';
 
@@ -16,12 +17,16 @@ interface IProps {
 
 const AddCard = ({ listId }: IProps ) => {
 
+    // Estado del input y estado para validar si se esta agregando una tarjeta
     const [ isAddingCard, setIsAddingCard ] = useState<boolean>( false );
     const [ cardTitle, setCardTitle ] = useState<string>('');
 
+    // Referencia al query client, toast y lista
+    const toast = useToast();
     const queryClient = useQueryClient()
     const list = queryClient.getQueryData<IList>(['list', listId ]);
 
+    // Mutación para crear una tarjeta
     const { isLoading, mutate } = useMutation(
         ( cardTitle: string ) => createCard({
             listId,
@@ -31,10 +36,20 @@ const AddCard = ({ listId }: IProps ) => {
         })
     )
 
+    // Funcion para agregar una tarjeta y cancelar la edición
     const handleSubmitAddCard: FormEventHandler<HTMLDivElement> & FormEventHandler<HTMLFormElement> = event => {
         event.preventDefault();
 
-        if ( cardTitle.length < 6 ) return;
+        // Validar que el título de la tarjeta no sea vacío
+        if ( cardTitle.length < 6 ) {
+            toast({
+                title: 'El título de la tarjeta debe tener al menos 6 caracteres',
+                status: 'warning',
+                duration: 5000,
+                isClosable: true,
+            })
+            return;
+        }
 
         mutate(
             cardTitle,
