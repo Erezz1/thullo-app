@@ -137,6 +137,9 @@ const AddMemberMenu = () => {
                     display="flex"
                     flexDir="column"
                     gap="3"
+                    maxHeight="15rem"
+                    overflowY="auto"
+                    overflowX="hidden"
                 >
                     {
                         userFound.length >= 1
